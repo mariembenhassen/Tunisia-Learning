@@ -13,7 +13,9 @@ import 'package:flutter_first_project/constante.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_first_project/screens/login_screen/login_screen.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:flutter_first_project/constante.dart';
 import 'package:sizer/sizer.dart';
+import 'package:flutter_first_project/screens/login_screen/login_screen.dart';
 //import 'widgets/student_data.dart';
 
 //definition of the custom data
@@ -79,72 +81,9 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
 
-          /*IconButton(
-            icon: Icon(Icons.menu_open_rounded, size: 30),
-            onPressed: () {
-              // Handle custom icon press
-            },
-          ),*/
         ],
       ),
       drawer: const SideMenu(),
-      /*
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: kPrimaryColor,
-              ),
-              child: Text(
-                'KNANI SOUII SIHEM',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                ),
-              ),
-            ),
-            ListTile(
-              leading: Icon(Icons.home),
-              title: Text(
-                'Home',
-              ),
-              onTap: () {
-                // Handle Home tap
-                Navigator.pop(context); // Close the drawer
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.school),
-              title: Text('Courses'),
-              onTap: () {
-                // Handle Courses tap
-                Navigator.pop(context); // Close the drawer
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.settings),
-              title: Text('Settings'),
-              onTap: () {
-                // Handle Settings tap
-                Navigator.pop(context); // Close the drawer
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.logout),
-              title: Text('Logout'),
-              onTap: () {
-                // Handle logout action
-                Navigator.pushNamedAndRemoveUntil(
-                    context, '/login', (route) => false); // Adjust your route
-              },
-            ),
-          ],
-        ),
-      ),*/
-
-      //
       body: Column(
         children: [
           // We will divide the screen into two parts
@@ -152,7 +91,7 @@ class HomeScreen extends StatelessWidget {
           Container(
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height / 3.5,
-            padding: EdgeInsets.all(kDefaultPadding),
+            padding: EdgeInsets.all(20.0),
             color: kPrimaryColor,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -204,13 +143,13 @@ class HomeScreen extends StatelessWidget {
                                   ),
                         ),
                         SizedBox(
-                          height: kDefaultPadding / 2,
+                          height: 20.0 / 2,
                         ),
                         YearSelectionWidget(),
                       ],
                     ),
                     SizedBox(
-                      height: kDefaultPadding / 2,
+                      height: 20.0 / 2,
                     ),
                   ],
                 ),
@@ -224,7 +163,7 @@ class HomeScreen extends StatelessWidget {
             child: Container(
               width: 100.w,
               decoration: BoxDecoration(
-                color: kOtherColor,
+                color: Color(0xFFF4F6F7),
                 borderRadius: kTopBorderRadius,
               ),
               child: SingleChildScrollView(
@@ -237,8 +176,8 @@ class HomeScreen extends StatelessWidget {
                       children: [
                         HomeCard(
                           onPress: () {},
-                          icon: 'assets/icons/quiz.svg',
-                          title: 'Take Quiz',
+                          icon: 'assets/icons/ask.svg',
+                          title: 'Messagerie',
                         ),
                         HomeCard(
                           onPress: () {
@@ -247,7 +186,7 @@ class HomeScreen extends StatelessWidget {
                             //context, AssignmentScreen.routeName);
                           },
                           icon: 'assets/icons/assignment.svg',
-                          title: 'Assignments',
+                          title: 'Cours et exercice',
                         ),
                       ],
                     ),
@@ -257,12 +196,12 @@ class HomeScreen extends StatelessWidget {
                         HomeCard(
                           onPress: () {},
                           icon: 'assets/icons/holiday.svg',
-                          title: 'Holidays',
+                          title: 'Demande D\'absences',
                         ),
                         HomeCard(
                           onPress: () {},
                           icon: 'assets/icons/timetable.svg',
-                          title: 'Time Table',
+                          title: 'Demande De Rattrapage',
                         ),
                       ],
                     ),
@@ -291,21 +230,6 @@ class HomeScreen extends StatelessWidget {
                           onPress: () {},
                           icon: 'assets/icons/ask.svg',
                           title: 'Ask',
-                        ),
-                        HomeCard(
-                          onPress: () {},
-                          icon: 'assets/icons/gallery.svg',
-                          title: 'Gallery',
-                        ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        HomeCard(
-                          onPress: () {},
-                          icon: 'assets/icons/event.svg',
-                          title: 'Events',
                         ),
                         HomeCard(
                           onPress: () {},
@@ -345,7 +269,7 @@ class HomeCard extends StatelessWidget {
         height: 20.h,
         decoration: BoxDecoration(
           color: kPrimaryColor,
-          borderRadius: BorderRadius.circular(kDefaultPadding / 2),
+          borderRadius: BorderRadius.circular(20.0 / 2),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -355,7 +279,7 @@ class HomeCard extends StatelessWidget {
               icon,
               height: SizerUtil.deviceType == DeviceType.tablet ? 30.sp : 40.sp,
               width: SizerUtil.deviceType == DeviceType.tablet ? 30.sp : 40.sp,
-              color: kOtherColor,
+              color: Color(0xFFF4F6F7),
             ),
             Text(
               title,
@@ -391,8 +315,8 @@ class _YearSelectionWidgetState extends State<YearSelectionWidget> {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 12.0),
       decoration: BoxDecoration(
-        color: kOtherColor,
-        borderRadius: BorderRadius.circular(kDefaultPadding),
+        color: Color(0xFFF4F6F7),
+        borderRadius: BorderRadius.circular(20.0),
       ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(

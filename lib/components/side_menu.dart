@@ -91,45 +91,6 @@ class SideMenuState extends State<SideMenu> {
                     ),
                   ),
                   //modifier profile
-                  ListTile(
-                    leading: Icon(
-                      Icons.home_filled,
-                      color: const Color.fromARGB(255, 0, 0, 0),
-                      size: 25,
-                    ),
-                    title: Text(
-                      "Demande de rattrapage",
-                      style: TextStyle(
-                          color: const Color.fromARGB(255, 0, 0, 0),
-                          fontSize: 20,
-                          fontWeight: FontWeight.normal),
-                    ),
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => HomeScreen()),
-                    ),
-                  ),
-                  //
-                  //
-                  ListTile(
-                    leading: Icon(
-                      Icons.home_filled,
-                      color: const Color.fromARGB(255, 0, 0, 0),
-                      size: 25,
-                    ),
-                    title: Text(
-                      "Demande d'absences",
-                      style: TextStyle(
-                          color: const Color.fromARGB(255, 0, 0, 0),
-                          fontSize: 20,
-                          fontWeight: FontWeight.normal),
-                    ),
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => HomeScreen()),
-                    ),
-                  ),
-                  //
                   //
                   ListTile(
                     leading: Icon(
@@ -153,7 +114,7 @@ class SideMenuState extends State<SideMenu> {
                   //
                   ListTile(
                     leading: Icon(
-                      Icons.home_filled,
+                      Icons.message_rounded,
                       color: const Color.fromARGB(255, 0, 0, 0),
                       size: 25,
                     ),
@@ -169,47 +130,6 @@ class SideMenuState extends State<SideMenu> {
                       MaterialPageRoute(builder: (context) => HomeScreen()),
                     ),
                   ),
-                  //
-                  //
-                  ListTile(
-                    leading: Icon(
-                      Icons.home_filled,
-                      color: const Color.fromARGB(255, 0, 0, 0),
-                      size: 25,
-                    ),
-                    title: Text(
-                      "Cours en ligne",
-                      style: TextStyle(
-                          color: const Color.fromARGB(255, 0, 0, 0),
-                          fontSize: 20,
-                          fontWeight: FontWeight.normal),
-                    ),
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => HomeScreen()),
-                    ),
-                  ),
-                  //
-                  //
-                  ListTile(
-                    leading: Icon(
-                      Icons.home_filled,
-                      color: const Color.fromARGB(255, 0, 0, 0),
-                      size: 25,
-                    ),
-                    title: Text(
-                      "Documents",
-                      style: TextStyle(
-                          color: const Color.fromARGB(255, 0, 0, 0),
-                          fontSize: 20,
-                          fontWeight: FontWeight.normal),
-                    ),
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => HomeScreen()),
-                    ),
-                  ),
-                  //
                   //divider2
                   Divider(),
                   ListTile(

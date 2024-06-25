@@ -1,13 +1,17 @@
+import 'dart:async';
+import 'dart:convert';
+import 'package:flutter_first_project/constante.dart';
 import 'package:flutter_first_project/components/custom_buttons.dart';
 import 'package:flutter_first_project/screens/home_screen/home_screen.dart';
-//import 'package:flutter_first_project/screens/selection_screen/selection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_first_project/constante.dart';
+import 'package:flutter_first_project/screens/home_screen/parent_home_screen.dart';
 import 'package:sizer/sizer.dart';
+import 'package:http/http.dart' as http;
 
-//fazet password visibile : déclaration
-late bool _passwordVissible;
+// Password visibility: declaration
+late bool _passwordVisible;
 
 class LoginScreen extends StatefulWidget {
   static String routeName = 'LoginScreen';
@@ -17,64 +21,178 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  //validate our form now
+  // Validate our form now
   final _formKey = GlobalKey<FormState>();
 
-  //change current state
+  // Controllers for text fields to get input values
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  // Change current state
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    _passwordVissible = true;
+    _passwordVisible = true;
   }
 
   //
+  Future<void> _login() async {
+    final String email = _emailController.text;
+    final String password = _passwordController.text;
+
+    try {
+      final response = await http.post(
+        Uri.parse('http://localhost/Tunisia_Learning_backend/login.php'),
+        headers: <String, String>{
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: {
+          'email': email,
+          'password': password,
+        },
+      );
+      if (response.statusCode == 200) {
+        final responseBody = response.body;
+        print('Response Body: $responseBody');
+        final Map<String, dynamic> responseData = json.decode(responseBody);
+
+        if (responseData['success']) {
+          print('Login Successful, Role: ${responseData['role']}');
+          if (responseData['role'] == 'parent') {
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              ParentHomeScreen.routeName,
+              (route) => false,
+              arguments: {
+                'id': responseData['data']['id'],
+                'nomprenom': responseData['data']['nomprenom'],
+              },
+            );
+          } else if (responseData['role'] == 'teacher') {
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              HomeScreen.routeName,
+              (route) => false,
+              arguments: {
+                'id': responseData['data']['id'],
+                'nom': responseData['data']['nom'],
+                'prenom': responseData['data']['prenom'],
+              },
+            );
+          }
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(responseData['message'])),
+          );
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to login. Please try again.')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('An error occurred: $e')),
+      );
+    }
+  }
+
+  //
+
+  /*Future<void> _login() async {
+    final String email = _emailController.text;
+    final String password = _passwordController.text;
+
+    try {
+      final response = await http.post(
+        Uri.parse('http://localhost/Tunisia_Learning_backend/login.php'),
+        headers: <String, String>{
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: {
+          'email': email,
+          'password': password,
+        },
+      );
+      if (response.statusCode == 200) {
+        final responseBody = response.body;
+        final Map<String, dynamic> responseData = json.decode(responseBody);
+
+        if (responseData['success']) {
+          if (responseData['role'] == 'parent') {
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              ParentHomeScreen.routeName,
+              (route) => false,
+              /* arguments: {
+                'children': responseData['children'],
+              },*/
+            );
+          } else if (responseData['role'] == 'teacher') {
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              HomeScreen.routeName,
+              (route) => false,
+            );
+          }
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(responseData['message'])),
+          );
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to login. Please try again.')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('An error occurred: $e')),
+      );
+    }
+  }
+*/
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      //the keyboard hid when the user type out of the input
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
         body: ListView(
           children: [
             Container(
-              //fit all screen size : use MediaQuery
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height / 2.8,
               child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      'assets/images/splash.png',
-                      height: 20.h,
-                      width: 40.w,
-                    ),
-                    SizedBox(
-                      height: kDefaultPadding / 2,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text('Tunisia ',
-                            style: Theme.of(context).textTheme.titleMedium),
-                        Text(
-                          'Learning',
-                          style: Theme.of(context).textTheme.titleMedium,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    'assets/images/splash.png',
+                    height: 20.h,
+                    width: 40.w,
+                  ),
+                  SizedBox(height: kDefaultPadding / 2),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('Tunisia ',
+                          style: Theme.of(context).textTheme.headline6),
+                      Text('Learning',
+                          style: Theme.of(context).textTheme.headline6),
+                    ],
+                  ),
+                  SizedBox(height: kDefaultPadding / 6),
+                  Text(
+                    'Espace de connexion à la platforme',
+                    style: Theme.of(context).textTheme.subtitle2?.copyWith(
+                          fontSize: 14.0,
+                          fontWeight: FontWeight.w500,
+                          color: const Color.fromARGB(255, 255, 255, 255),
                         ),
-                      ],
-                    ),
-                    SizedBox(height: kDefaultPadding / 6),
-                    Text(
-                      'Espace de connexion à la platforme',
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            fontSize: 14.0,
-                            fontWeight: FontWeight.w500,
-                            color: const Color.fromARGB(255, 255, 255, 255),
-                          ),
-                    ),
-                    sizedBox,
-                  ]),
+                  ),
+                  SizedBox(height: kDefaultPadding),
+                ],
+              ),
             ),
             Container(
               width: MediaQuery.of(context).size.width,
@@ -94,119 +212,94 @@ class _LoginScreenState extends State<LoginScreen> {
                       key: _formKey,
                       child: Column(
                         children: [
-                          SizedBox(
-                            height: kDefaultPadding,
-                          ),
+                          SizedBox(height: kDefaultPadding),
                           TextFormField(
+                            controller: _emailController,
                             textAlign: TextAlign.start,
                             keyboardType: TextInputType.emailAddress,
                             style: TextStyle(
-                              color: kTextBlackColor,
+                              color: Colors.black,
                               fontSize: 17.0,
                               fontWeight: FontWeight.w300,
                             ),
                             decoration: InputDecoration(
-                              labelText: 'Entrer votre adresse email ou login',
+                              labelText: 'Enter your email or login',
                               floatingLabelBehavior:
                                   FloatingLabelBehavior.always,
                               isDense: true,
                             ),
-                            //control simple
                             validator: (value) {
-                              //for validation
-                              RegExp regExp = new RegExp(emailPattern);
+                              RegExp regExp = RegExp(emailPattern);
                               if (value == null || value.isEmpty) {
-                                return "Veuillez entrer du texte.";
-                                //if it does not matches the pattern, like
-                                //it not contains @
+                                return "Please enter some text.";
                               } else if (!regExp.hasMatch(value)) {
-                                return "Veuillez entrer une adresse email valide.";
+                                return "Please enter a valid email address.";
                               }
+                              return null;
                             },
                           ),
-                          SizedBox(
-                            height: kDefaultPadding,
-                          ),
+                          SizedBox(height: kDefaultPadding),
                           TextFormField(
-                            //fazet l3in
-                            obscureText: _passwordVissible,
+                            controller: _passwordController,
+                            obscureText: _passwordVisible,
                             textAlign: TextAlign.start,
                             keyboardType: TextInputType.visiblePassword,
                             style: TextStyle(
-                              color: kTextBlackColor,
+                              color: Colors.black,
                               fontSize: 17.0,
                               fontWeight: FontWeight.w300,
                             ),
                             decoration: InputDecoration(
-                              labelText: 'Entrer votre mot de passe',
+                              labelText: 'Enter your password',
                               floatingLabelBehavior:
                                   FloatingLabelBehavior.always,
                               isDense: true,
-                              //the password visibility when we press
                               suffixIcon: IconButton(
                                 onPressed: () {
                                   setState(() {
-                                    _passwordVissible = !_passwordVissible;
+                                    _passwordVisible = !_passwordVisible;
                                   });
                                 },
                                 icon: Icon(
-                                  _passwordVissible
+                                  _passwordVisible
                                       ? Icons.visibility_off_outlined
-                                      : Icons.visibility_off_outlined,
+                                      : Icons.visibility_outlined,
                                 ),
                                 iconSize: kDefaultPadding,
                               ),
                             ),
                             validator: (value) {
-                              if (value!.length < 5) {
-                                return "Doit comporter plus de 5 caractères.";
+                              if (value!.length < 6) {
+                                return "Password must be at least 6 characters.";
                               }
+                              return null;
                             },
                           ),
-                          SizedBox(
-                            height: kDefaultPadding,
-                          ),
+                          SizedBox(height: kDefaultPadding),
                           DefaultButton(
                             onPress: () {
                               if (_formKey.currentState!.validate()) {
-                                Navigator.pushNamedAndRemoveUntil(context,
-                                    HomeScreen.routeName, (route) => false);
-
-                                //go to next page
-                                /*Navigator.pushNamed(
-                                  context,
-                                  StudentsListScreen.routeName,
-                                  arguments: {
-                                
-                                'parentName': 'John Doe',
-                                'students': ['Alice', 'Bob', 'Charlie'],
-                               
-                                  /*  'parentName':
-                                        'Actual Parent Name', // Replace with actual parent name
-                                    'students': [
-                                      'Student 1',
-                                      'Student 2',
-                                      'Student 3'
-                                    ],*/ // Replace with actual list of students
-                                  },
-                                );*/
+                                _login();
                               }
                             },
-                            title: 'Connecter',
+                            title: 'Login',
                             iconData: Icons.arrow_forward_outlined,
                           ),
-                          sizedBox,
+                          SizedBox(height: kDefaultPadding),
                           Align(
                             alignment: Alignment.bottomRight,
-                            child: Text(
-                              'Mot de passe oubliée',
-                              textAlign: TextAlign.end,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleSmall!
-                                  .copyWith(
-                                      color: kPrimaryColor,
-                                      fontWeight: FontWeight.w500),
+                            child: TextButton(
+                              onPressed: () {
+                                // Implement forgot password action
+                              },
+                              child: Text(
+                                'Forgot password?',
+                                textAlign: TextAlign.end,
+                                style: TextStyle(
+                                  color: Colors.blue,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
                             ),
                           ),
                         ],
@@ -216,7 +309,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
             ),
-            //b1
           ],
         ),
       ),
