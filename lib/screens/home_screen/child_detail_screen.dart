@@ -1,248 +1,85 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_first_project/screens/login_screen/login_screen.dart';
+import 'package:flutter_first_project/constante.dart';
+import 'package:sizer/sizer.dart';
+import 'package:http/http.dart' as http;
+import 'dart:async';
+
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+// child_detail_screen.dart
 
 class ChildDetailScreen extends StatelessWidget {
-  final Map<String, dynamic> child;
-
-  static var routeName;
-
-  ChildDetailScreen({required this.child});
+  static const routeName = 'ChildDetailScreen';
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(child['child_name']),
-      ),
-      body: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text('Name: ${child['child_name']}',
-                style: TextStyle(fontSize: 20)),
-            SizedBox(height: 10),
-            Text('Sex: ${child['sexe']}', style: TextStyle(fontSize: 18)),
-            SizedBox(height: 10),
-            Text('Level: ${child['niveau']}', style: TextStyle(fontSize: 18)),
-            SizedBox(height: 10),
-            Text('Class: ${child['classe']}', style: TextStyle(fontSize: 18)),
-            // Add more fields as necessary
-          ],
+    final Map<String, dynamic>? args =
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+
+    if (args == null || args['child'] == null) {
+      // Handle if no child data is passed
+      return Scaffold(
+        appBar: AppBar(
+          title: Text('Error'),
         ),
-      ),
-    );
-  }
-}
+        body: Center(
+          child: Text('Error: No child data provided.'),
+        ),
+      );
+    }
 
-/*import 'package:flutter/material.dart';
+    final dynamic childData = args['child'];
 
-void main() {
-  runApp(ChildDetailScreen());
-}
-
-class ChildDetailScreen extends StatelessWidget {
-  static String routeName = 'ChildDetailScreen';
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Tunisia Learning',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: MyHomePage(),
-    );
-  }
-}
-
-class MyHomePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Tunisia Learning'),
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            // First screen layout
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                padding: const EdgeInsets.all(16.0),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Nom d\'utilisateur : ${childData['nom']} ${childData['prenom']}',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 10),
+              Text(
+                'École : School Name', // Replace with actual school name
+              ),
+              SizedBox(height: 10),
+              Text(
+                'Sexe : ${childData['sexe']}',
+              ),
+              Text(
+                'Date de naissance : ${childData['date_naissance']}',
+              ),
+              Text(
+                'Adresse : ${childData['adresse']}',
+              ),
+              SizedBox(height: 10),
+              ElevatedButton(
+                onPressed: () {
+                  // Handle button press for "Voir Plus"
+                },
+                child: Text('Voir Plus'),
+              ),
+              SizedBox(height: 20),
+              Container(
+                padding: EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: Colors.blue[50],
+                  color: Colors.grey[200],
                   borderRadius: BorderRadius.circular(8.0),
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Nom d\'utilisateur : [02301321] MONIA JOUNI',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    Text('Nom d\'établissement : Ecole Primaire Ibn Khaldoun'),
-                    Text('Année scolaire en cours: 2023/2024'),
-                    SizedBox(height: 10),
-                    DropdownButton<String>(
-                      isExpanded: true,
-                      items: <String>[
-                        'KALLEL BAYREM',
-                        'KALLEL YAHYA',
-                        'KALLEL LAMIS'
-                      ].map((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                      onChanged: (_) {},
-                      hint: Text('Élève en cours:'),
-                    ),
-                    SizedBox(height: 10),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Container(
-                            padding: EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              color: Colors.blue,
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            child: Text(
-                              'Niveau :',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 10),
-                        Expanded(
-                          child: Container(
-                            padding: EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              color: Colors.blue,
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            child: Text(
-                              'Classe :',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 10),
-                    ElevatedButton(
-                      onPressed: () {},
-                      child: Text('Voir Plus'),
-                    ),
-                    SizedBox(height: 10),
-                    Container(
-                      padding: EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: Colors.grey[200],
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      child: Text('Vacance scolaire'),
-                    ),
-                  ],
-                ),
+                child: Text('Vacance scolaire'),
               ),
-            ),
-            // Second screen layout
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                padding: const EdgeInsets.all(16.0),
-                decoration: BoxDecoration(
-                  color: Colors.blue[100],
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                child: Column(
-                  children: [
-                    Text(
-                      'Nom d\'utilisateur : Parent Name',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    Text('Nom d\'établissement : School'),
-                    SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        StudentButton(name: 'Kallel Yahya'),
-                        StudentButton(name: 'Kallel Bayrem'),
-                      ],
-                    ),
-                    SizedBox(height: 20),
-                    StudentButton(name: 'Kallel Lamis'),
-                  ],
-                ),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 }
-
-class StudentButton extends StatelessWidget {
-  final String name;
-
-  StudentButton({required this.name});
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: ElevatedButton(
-        onPressed: () {},
-        child: Text(name),
-        style: ElevatedButton.styleFrom(
-          padding: EdgeInsets.symmetric(vertical: 20),
-          backgroundColor: Colors.blue,
-          textStyle: TextStyle(color: Colors.white),
-        ),
-      ),
-    );
-  }
-}
-
-
-
-/*import 'package:flutter/material.dart';
-
-class ChildDetailScreen extends StatelessWidget {
-  final Map<String, dynamic> child;
-
-  static var routeName;
-
-  ChildDetailScreen({required this.child});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(child['child_name']),
-      ),
-      body: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text('Name: ${child['child_name']}',
-                style: TextStyle(fontSize: 20)),
-            SizedBox(height: 10),
-            Text('Sex: ${child['sexe']}', style: TextStyle(fontSize: 18)),
-            SizedBox(height: 10),
-            Text('Level: ${child['niveau']}', style: TextStyle(fontSize: 18)),
-            SizedBox(height: 10),
-            Text('Class: ${child['classe']}', style: TextStyle(fontSize: 18)),
-            // Add more fields as necessary
-          ],
-        ),
-      ),
-    );
-  }
-}
-*/
-*/

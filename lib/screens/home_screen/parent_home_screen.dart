@@ -1,13 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_first_project/screens/home_screen/child_detail_screen.dart';
 import 'package:flutter_first_project/screens/login_screen/login_screen.dart';
 import 'package:flutter_first_project/constante.dart';
 import 'package:sizer/sizer.dart';
+import 'package:http/http.dart' as http;
+import 'dart:async';
+import 'dart:convert';
 
-class ParentHomeScreen extends StatelessWidget {
+import 'package:flutter/material.dart';
+import 'package:flutter_first_project/screens/login_screen/login_screen.dart';
+import 'package:flutter_first_project/constante.dart';
+import 'package:sizer/sizer.dart';
+import 'package:http/http.dart' as http;
+import 'dart:async';
+import 'dart:convert';
+
+class ParentHomeScreen extends StatefulWidget {
   static const String routeName = 'ParentHomeScreen';
 
   @override
-  Widget build(BuildContext context) {
+  _ParentHomeScreenState createState() => _ParentHomeScreenState();
+}
+
+class _ParentHomeScreenState extends State<ParentHomeScreen> {
+  late String id;
+  late String nomprenom;
+  List<dynamic> children = [];
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     final Map<String, dynamic>? args =
         ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
 
@@ -22,17 +44,54 @@ class ParentHomeScreen extends StatelessWidget {
           SnackBar(content: Text('Invalid arguments')),
         );
       });
-      return Scaffold();
+      return;
     }
 
-    final String id = args['id'];
-    final String nomprenom = args['nomprenom'];
-    // Simulating the list of children. You can fetch this data from the backend.
-    final List<dynamic> children = [
-      {'child_name': 'Child 1'},
-      {'child_name': 'Child 2'},
-    ];
+    id = args['id'];
+    nomprenom = args['nomprenom'];
+    _fetchChildrenData();
+  }
 
+  Future<void> _fetchChildrenData() async {
+    final url = 'http://localhost/Tunisia_Learning_backend/get_children.php';
+    final response = await http.post(Uri.parse(url), body: {'id': id});
+
+    if (response.statusCode == 200) {
+      final responseData = json.decode(response.body);
+      if (responseData['success']) {
+        Set<String> namesSet = Set();
+        List<dynamic> fetchedChildren =
+            List.from(responseData['data']).where((child) {
+          String childName = child['nom'] + ' ' + child['prenom'];
+          if (namesSet.contains(childName)) {
+            return false;
+          } else {
+            namesSet.add(childName);
+            return true;
+          }
+        }).toList();
+
+        if (fetchedChildren.length == 1) {
+          _navigateToChildDetailScreen(context, fetchedChildren.first);
+        } else {
+          setState(() {
+            children = fetchedChildren;
+          });
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(responseData['message'])),
+        );
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to fetch data')),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: kPrimaryColor,
@@ -50,6 +109,35 @@ class ParentHomeScreen extends StatelessWidget {
             onPressed: () {
               // Handle bell icon press
             },
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: PopupMenuButton<String>(
+              onSelected: (String result) {
+                if (result == 'logout') {
+                  // Handle logout action
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, LoginScreen.routeName, (route) => false);
+                }
+              },
+              offset: Offset(0, 50), // Adjust the offset for vertical alignment
+              itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                PopupMenuItem<String>(
+                  value: 'logout',
+                  child: Row(
+                    children: [
+                      Icon(Icons.logout, color: Colors.black54),
+                      SizedBox(width: 10),
+                      Text('Déconnexion'),
+                    ],
+                  ),
+                ),
+              ],
+              icon: Icon(
+                Icons.account_circle_sharp,
+                size: 30,
+              ),
+            ),
           ),
         ],
       ),
@@ -100,24 +188,31 @@ class ParentHomeScreen extends StatelessWidget {
                 color: Color(0xFFF4F6F7),
                 borderRadius: BorderRadius.circular(20.0),
               ),
-              child: GridView.builder(
-                padding: EdgeInsets.all(20.0),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 20.0,
-                  mainAxisSpacing: 20.0,
-                ),
-                itemCount: children.length,
-                itemBuilder: (context, index) {
-                  final child = children[index];
-                  return HomeCard(
-                    onPress: () {
-                      _navigateToChildDetailScreen(context, child);
-                    },
-                    title: child['child_name'],
-                  );
-                },
-              ),
+              child: children.isEmpty
+                  ? Center(
+                      child: Text(
+                        'No children found.',
+                        style: Theme.of(context).textTheme.subtitle1,
+                      ),
+                    )
+                  : GridView.builder(
+                      padding: EdgeInsets.all(20.0),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: children.length == 1 ? 1 : 2,
+                        crossAxisSpacing: 20.0,
+                        mainAxisSpacing: 20.0,
+                      ),
+                      itemCount: children.length,
+                      itemBuilder: (context, index) {
+                        final child = children[index];
+                        return HomeCard(
+                          onPress: () {
+                            _navigateToChildDetailScreen(context, child);
+                          },
+                          title: child['nom'] + ' ' + child['prenom'],
+                        );
+                      },
+                    ),
             ),
           ),
         ],
@@ -126,12 +221,11 @@ class ParentHomeScreen extends StatelessWidget {
   }
 
   void _navigateToChildDetailScreen(BuildContext context, dynamic child) {
-    // Uncomment and update the navigation code according to your app structure
-    // Navigator.pushNamed(
-    //   context,
-    //   ChildDetailScreen.routeName,
-    //   arguments: {'child': child},
-    // );
+    Navigator.pushNamed(
+      context,
+      ChildDetailScreen.routeName,
+      arguments: {'child': child},
+    );
   }
 }
 
@@ -169,4 +263,3 @@ class HomeCard extends StatelessWidget {
     );
   }
 }
-

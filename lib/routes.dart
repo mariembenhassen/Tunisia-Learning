@@ -13,9 +13,7 @@ Map<String, WidgetBuilder> routes = {
   HomeScreen.routeName: (context) => HomeScreen(),
   MyProfileScreen.routeName: (context) => MyProfileScreen(),
   ParentHomeScreen.routeName: (context) => ParentHomeScreen(),
-  //ChildDetailScreen.routeName: (context) => ChildDetailScreen(
-  //   child: {},
-  // )
+ ChildDetailScreen.routeName: (context) => ChildDetailScreen(),
 };
 
 /*

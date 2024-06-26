@@ -8,9 +8,10 @@ class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //now the implement of the futur page login
-    Future.delayed(Duration(seconds: 5), ()=> Navigator.pushNamedAndRemoveUntil(context, LoginScreen.routeName, (route) => false));
-  
-
+    Future.delayed(
+        Duration(seconds: 5),
+        () => Navigator.pushNamedAndRemoveUntil(
+            context, LoginScreen.routeName, (route) => false));
 
     //scaffold color set to primary color in main in our text theme
     return Scaffold(
