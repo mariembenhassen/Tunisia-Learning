@@ -6,8 +6,8 @@ import 'package:sizer/sizer.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_first_project/screens/home_screen/child_detail_screen.dart';
 import 'package:flutter_first_project/screens/login_screen/login_screen.dart';
 import 'package:flutter_first_project/constante.dart';
 import 'package:sizer/sizer.dart';

@@ -97,6 +97,61 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  //
+
+  /*Future<void> _login() async {
+    final String email = _emailController.text;
+    final String password = _passwordController.text;
+
+    try {
+      final response = await http.post(
+        Uri.parse('http://localhost/Tunisia_Learning_backend/login.php'),
+        headers: <String, String>{
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: {
+          'email': email,
+          'password': password,
+        },
+      );
+      if (response.statusCode == 200) {
+        final responseBody = response.body;
+        final Map<String, dynamic> responseData = json.decode(responseBody);
+
+        if (responseData['success']) {
+          if (responseData['role'] == 'parent') {
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              ParentHomeScreen.routeName,
+              (route) => false,
+              /* arguments: {
+                'children': responseData['children'],
+              },*/
+            );
+          } else if (responseData['role'] == 'teacher') {
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              HomeScreen.routeName,
+              (route) => false,
+            );
+          }
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(responseData['message'])),
+          );
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to login. Please try again.')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('An error occurred: $e')),
+      );
+    }
+  }
+*/
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
