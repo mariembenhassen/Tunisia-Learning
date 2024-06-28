@@ -53,7 +53,8 @@ class _ParentHomeScreenState extends State<ParentHomeScreen> {
   }
 
   Future<void> _fetchChildrenData() async {
-    final url = 'http://localhost/Tunisia_Learning_backend/get_children.php';
+    final url =
+        'http://localhost/Tunisia_Learning_backend/TunisiaLearningPhp/get_children.php';
     final response = await http.post(Uri.parse(url), body: {'id': id});
 
     if (response.statusCode == 200) {
