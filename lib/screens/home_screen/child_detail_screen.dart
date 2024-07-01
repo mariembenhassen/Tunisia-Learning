@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_first_project/components/side_menu.dart';
+import 'package:flutter_first_project/components/side_menu_parent.dart';
 import 'package:flutter_first_project/screens/login_screen/login_screen.dart';
 import 'package:flutter_first_project/constante.dart';
 import 'package:flutter_svg/svg.dart';
@@ -20,6 +20,7 @@ import 'package:sizer/sizer.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
+import 'package:flutter_first_project/components/side_menu_parent.dart';
 
 class ChildDetailScreen extends StatelessWidget {
   static const routeName = 'ChildDetailScreen';
@@ -38,7 +39,7 @@ class ChildDetailScreen extends StatelessWidget {
     } else {
       throw Exception('Failed to load child details');
     }
-  } 
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -112,7 +113,7 @@ class ChildDetailScreen extends StatelessWidget {
           ),
         ],
       ),
-      drawer: SideMenu(),
+      drawer: const SideMenu(),
       body: FutureBuilder<Map<String, dynamic>>(
         future: futureChildDetails,
         builder: (context, snapshot) {
