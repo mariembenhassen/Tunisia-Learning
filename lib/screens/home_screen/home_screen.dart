@@ -11,14 +11,13 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:sizer/sizer.dart';
-//222
-import 'package:flutter/material.dart';
-import 'package:flutter_first_project/screens/login_screen/login_screen.dart';
-import 'package:http/http.dart' as http;
-import 'dart:async';
-import 'dart:convert';
 
-//*
+void main() {
+  runApp(MaterialApp(
+    home: HomeScreen(),
+  ));
+}
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
   static String routeName = 'HomeScreen';
@@ -29,6 +28,11 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late Future<TeacherDetails?> _teacherDetailsFuture;
+  //
+  late String id = ''; // Initialize id, nom, prenom
+  late String nom = '';
+  late String prenom = '';
+  //
 
   @override
   void initState() {
@@ -47,9 +51,23 @@ class _HomeScreenState extends State<HomeScreen> {
         },
       );
 
+      //
       if (response.statusCode == 200) {
-        return TeacherDetails.fromJson(jsonDecode(response.body));
-      } else {
+        final teacherDetails =
+            TeacherDetails.fromJson(jsonDecode(response.body));
+        setState(() {
+          id = teacherDetails.id;
+          nom = teacherDetails.nom;
+          prenom = teacherDetails.prenom;
+        });
+        return teacherDetails;
+      }
+      //
+      /*if (response.statusCode == 200) {
+
+        //return TeacherDetails.fromJson(jsonDecode(response.body));
+      } */
+      else {
         throw Exception('Failed to load teacher details');
       }
     } catch (e) {
@@ -135,7 +153,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      drawer: const SideMenu(),
+      drawer: SideMenu(id: id, nom: nom, prenom: prenom),
       body: Column(
         children: [
           // We will divide the screen into two parts
@@ -168,7 +186,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 .textTheme
                                 .titleSmall!
                                 .copyWith(
-                                  fontSize: 15.0,
+                                  fontSize: 14.0,
                                   color: Colors.white,
                                 )),
 
@@ -398,12 +416,6 @@ class _YearSelectionWidgetState extends State<YearSelectionWidget> {
       ),
     );
   }
-}
-
-void main() {
-  runApp(MaterialApp(
-    home: HomeScreen(),
-  ));
 }
 
 class TeacherDetails {
