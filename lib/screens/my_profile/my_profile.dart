@@ -51,14 +51,14 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
         return Theme(
           data: ThemeData.light().copyWith(
             colorScheme: ColorScheme.light(
-              primary: kPrimaryColor, // Header background color
+              primary: Color(0xFF345FB4), // Header background color
               onPrimary: Colors.white, // Header text color
-              onSurface: kTextBlackColor, // Body text color
+              onSurface: Color(0xFF313131), // Body text color
             ),
             textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(
-                foregroundColor: kPrimaryColor, // Button text color
-              ),
+                  foregroundColor: Color(0xFF345FB4) // Button text color
+                  ),
             ),
           ),
           child: child!,
@@ -132,7 +132,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
               width: 100.w,
               height: SizerUtil.deviceType == DeviceType.tablet ? 19.h : 15.h,
               decoration: BoxDecoration(
-                color: kPrimaryColor,
+                color: Color(0xFF345FB4),
                 borderRadius: kBottomBorderRadius,
               ),
               child: Row(
@@ -248,7 +248,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
               //
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.white,
-                backgroundColor: kPrimaryColor, // Text color
+                backgroundColor: Color(0xFF345FB4), // Text color
                 padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -342,7 +342,7 @@ class _ProfileDetailRowState extends State<ProfileDetailRow> {
               Text(
                 widget.title,
                 style: Theme.of(context).textTheme.subtitle1!.copyWith(
-                      color: kTextBlackColor,
+                      color: Color(0xFF313131),
                       fontSize: SizerUtil.deviceType == DeviceType.tablet
                           ? 7.sp
                           : 9.sp,
@@ -484,7 +484,7 @@ class _ProfileDetailColumnState extends State<ProfileDetailColumn> {
               Text(
                 widget.title,
                 style: Theme.of(context).textTheme.subtitle1!.copyWith(
-                      color: kTextBlackColor,
+                      color: Color(0xFF313131),
                       fontSize: SizerUtil.deviceType == DeviceType.tablet
                           ? 7.sp
                           : 11.sp,

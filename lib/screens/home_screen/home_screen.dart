@@ -1,31 +1,84 @@
-// ignore_for_file: prefer_const_constructors, constant_identifier_names
-
 import 'dart:ui';
 import 'package:flutter_first_project/components/side_menu.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_first_project/components/side_menu.dart';
 import 'package:flutter_first_project/constante.dart';
-//import 'package:flutter_first_project/screens/assignment_screen/assignment_screen.dart';
-//import 'package:flutter_first_project/screens/datesheet_screen/datesheet_screen.dart';
-//import 'package:flutter_first_project/screens/fee_screen/fee_screen.dart';
-//import 'package:flutter_first_project/screens/my_profile/my_profile.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_first_project/screens/login_screen/login_screen.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:flutter_first_project/constante.dart';
+import 'package:http/http.dart' as http;
+import 'dart:async';
+import 'package:flutter/material.dart';
+import 'dart:convert';
 import 'package:sizer/sizer.dart';
+//222
+import 'package:flutter/material.dart';
 import 'package:flutter_first_project/screens/login_screen/login_screen.dart';
-//import 'widgets/student_data.dart';
+import 'package:http/http.dart' as http;
+import 'dart:async';
+import 'dart:convert';
 
-//definition of the custom data
-
-class HomeScreen extends StatelessWidget {
+//*
+class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
   static String routeName = 'HomeScreen';
 
   @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  late Future<TeacherDetails?> _teacherDetailsFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _teacherDetailsFuture = fetchTeacherDetails();
+  }
+
+  Future<TeacherDetails?> fetchTeacherDetails() async {
+    try {
+      // Replace with your actual endpoint URL
+      final response = await http.get(
+        Uri.parse(
+            'http://localhost/Tunisia_Learning_backend/TunisiaLearningPhp/get_teacher_detail.php?id=1'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return TeacherDetails.fromJson(jsonDecode(response.body));
+      } else {
+        throw Exception('Failed to load teacher details');
+      }
+    } catch (e) {
+      print('Error fetching teacher details: $e');
+      return null;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    return Scaffold(
+      body: FutureBuilder<TeacherDetails?>(
+        future: _teacherDetailsFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (snapshot.hasData && snapshot.data != null) {
+            return buildContent(snapshot.data!);
+          } else {
+            return Center(child: Text('No data available'));
+          }
+        },
+      ),
+    );
+  }
+
+  Widget buildContent(TeacherDetails teacherDetails) {
     return Scaffold(
       //the appbar part
 
@@ -80,7 +133,6 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
           ),
-
         ],
       ),
       drawer: const SideMenu(),
@@ -90,8 +142,9 @@ class HomeScreen extends StatelessWidget {
           // Fixed height for first half
           Container(
             width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height / 3.5,
-            padding: EdgeInsets.all(20.0),
+            height: MediaQuery.of(context).size.height / 4.5,
+            padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 0),
+            // padding: EdgeInsets.all(20.0),
             color: kPrimaryColor,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -110,12 +163,12 @@ class HomeScreen extends StatelessWidget {
                                   ),
                         ),
                         //exemple of a name of user methode get
-                        Text('KNANI SOUII SIHEM',
+                        Text('${teacherDetails.nom} ${teacherDetails.prenom}',
                             style: Theme.of(context)
                                 .textTheme
                                 .titleSmall!
                                 .copyWith(
-                                  fontSize: 12.0,
+                                  fontSize: 15.0,
                                   color: Colors.white,
                                 )),
 
@@ -126,12 +179,12 @@ class HomeScreen extends StatelessWidget {
                                     fontSize: 12.0,
                                   ),
                         ),
-                        Text('Ecole Primaire Ibn Khaldoun',
+                        Text('${teacherDetails.etablissement}',
                             style: Theme.of(context)
                                 .textTheme
                                 .titleSmall!
                                 .copyWith(
-                                  fontSize: 12.0,
+                                  fontSize: 15.0,
                                   color: Colors.white,
                                 )),
 
@@ -142,14 +195,16 @@ class HomeScreen extends StatelessWidget {
                                     fontSize: 12.0,
                                   ),
                         ),
-                        SizedBox(
-                          height: 20.0 / 2,
-                        ),
-                        YearSelectionWidget(),
+
+                        Text('${teacherDetails.anneeScolaireEnCours}',
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleSmall!
+                                .copyWith(
+                                  fontSize: 15.0,
+                                  color: Colors.white,
+                                )),
                       ],
-                    ),
-                    SizedBox(
-                      height: 20.0 / 2,
                     ),
                   ],
                 ),
@@ -349,4 +404,51 @@ void main() {
   runApp(MaterialApp(
     home: HomeScreen(),
   ));
+}
+
+class TeacherDetails {
+  final String id;
+  final String nom;
+  final String prenom;
+  final String dateNaissance;
+  final String lieuNaissance;
+  final String adresse;
+  final String telephone;
+  final String sexe;
+  final String email;
+  final String idEtablissement;
+  final String etablissement;
+  final String anneeScolaireEnCours;
+
+  TeacherDetails({
+    required this.id,
+    required this.nom,
+    required this.prenom,
+    required this.dateNaissance,
+    required this.lieuNaissance,
+    required this.adresse,
+    required this.telephone,
+    required this.sexe,
+    required this.email,
+    required this.idEtablissement,
+    required this.etablissement,
+    required this.anneeScolaireEnCours,
+  });
+
+  factory TeacherDetails.fromJson(Map<String, dynamic> json) {
+    return TeacherDetails(
+      id: json['data']['id'] ?? '',
+      nom: json['data']['nom'] ?? '',
+      prenom: json['data']['prenom'] ?? '',
+      dateNaissance: json['data']['date_naissance'] ?? '',
+      lieuNaissance: json['data']['lieu_naissance'] ?? '',
+      adresse: json['data']['adresse'] ?? '',
+      telephone: json['data']['telephone'] ?? '',
+      sexe: json['data']['sexe'] ?? '',
+      email: json['data']['email'] ?? '',
+      idEtablissement: json['data']['idetablissement'] ?? '',
+      etablissement: json['data']['etablissement'] ?? '',
+      anneeScolaireEnCours: json['data']['annee_scolaire_en_cours'] ?? '',
+    );
+  }
 }

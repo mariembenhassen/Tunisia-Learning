@@ -38,7 +38,7 @@ class ChildDetailScreen extends StatelessWidget {
     } else {
       throw Exception('Failed to load child details');
     }
-  }
+  } 
 
   @override
   Widget build(BuildContext context) {
@@ -111,7 +111,6 @@ class ChildDetailScreen extends StatelessWidget {
             ),
           ),
         ],
-        
       ),
       drawer: SideMenu(),
       body: FutureBuilder<Map<String, dynamic>>(
@@ -386,4 +385,3 @@ void main() {
     home: ChildDetailScreen(),
   ));
 }
-
