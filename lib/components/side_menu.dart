@@ -7,6 +7,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_first_project/screens/my_profile/my_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_first_project/screens/home_screen/home_screen.dart';
+import 'package:sizer/sizer.dart';
+
 class SideMenu extends StatefulWidget {
   final String id;
   final String nom;
@@ -29,7 +31,7 @@ class SideMenuState extends State<SideMenu> {
     return Container(
       width: 288,
       height: double.infinity,
-      color: Colors.white,
+      color: Color.fromARGB(255, 124, 183, 142),
       child: Column(
         children: [
           Align(
@@ -43,7 +45,7 @@ class SideMenuState extends State<SideMenu> {
           ),
           Expanded(
             child: ListView(
-              padding: EdgeInsets.zero,
+              //  padding: EdgeInsets.zero,
               children: [
                 UserAccountsDrawerHeader(
                   accountName: Text(
@@ -53,13 +55,15 @@ class SideMenuState extends State<SideMenu> {
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                  currentAccountPicture: Icon(
-                    Icons.account_circle_sharp,
-                    size: 50,
-                    color: Color.fromARGB(255, 44, 78, 181),
+                  currentAccountPicture: CircleAvatar(
+                    radius:
+                        SizerUtil.deviceType == DeviceType.tablet ? 12.w : 13.w,
+                    backgroundColor: Color.fromARGB(255, 204, 238, 230),
+                    backgroundImage:
+                        AssetImage('assets/images/teacher_profil.png'),
                   ),
                   decoration: BoxDecoration(
-                    color: Colors.white12,
+                    color: Color.fromARGB(31, 68, 201, 28),
                   ),
                   accountEmail: null,
                 ),

@@ -61,13 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
           prenom = teacherDetails.prenom;
         });
         return teacherDetails;
-      }
-      //
-      /*if (response.statusCode == 200) {
-
-        //return TeacherDetails.fromJson(jsonDecode(response.body));
-      } */
-      else {
+      } else {
         throw Exception('Failed to load teacher details');
       }
     } catch (e) {
@@ -145,10 +139,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ],
-              icon: Icon(
-                Icons.account_circle_sharp,
-                size: 30,
-              ),
             ),
           ),
         ],
@@ -223,6 +213,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                   color: Colors.white,
                                 )),
                       ],
+                    ),
+                    SizedBox(width: 25.0),
+                    CircleAvatar(
+                      radius: SizerUtil.deviceType == DeviceType.tablet
+                          ? 12.w
+                          : 13.w,
+                      backgroundColor: Color.fromARGB(255, 204, 238, 230),
+                      backgroundImage:
+                          AssetImage('assets/images/teacher_profil.png'),
                     ),
                   ],
                 ),
