@@ -12,17 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
-import 'package:flutter_first_project/screens/login_screen/login_screen.dart';
-import 'package:flutter_first_project/constante.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:sizer/sizer.dart';
-import 'package:http/http.dart' as http;
-import 'dart:async';
-import 'dart:convert';
-import 'package:flutter_first_project/components/side_menu_parent.dart';
-
-class ChildDetailScreen extends StatelessWidget {
+ class ChildDetailScreen extends StatelessWidget {
   static const routeName = 'ChildDetailScreen';
 
   final String apiUrl =

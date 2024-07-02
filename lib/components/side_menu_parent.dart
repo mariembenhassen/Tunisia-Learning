@@ -173,11 +173,11 @@ class SideMenuState extends State<SideMenu> {
                           fontSize: 20,
                           fontWeight: FontWeight.normal),
                     ),
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => MyProfileScreen()),
-                    ),
+                    //   onTap: () => Navigator.push(
+                    // context,
+                    // MaterialPageRoute(
+                    //   builder: (context) => MyProfileScreen()),
+                    //  ),
                   ),
                 ],
               ),

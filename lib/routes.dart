@@ -1,4 +1,3 @@
-
 import 'package:flutter_first_project/screens/home_screen/child_detail_screen.dart';
 import 'package:flutter_first_project/screens/home_screen/parent_home_screen.dart';
 import 'package:flutter_first_project/screens/login_screen/login_screen.dart';
@@ -13,7 +12,5 @@ Map<String, WidgetBuilder> routes = {
   HomeScreen.routeName: (context) => HomeScreen(),
   MyProfileScreen.routeName: (context) => MyProfileScreen(),
   ParentHomeScreen.routeName: (context) => ParentHomeScreen(),
- ChildDetailScreen.routeName: (context) => ChildDetailScreen(),
+  ChildDetailScreen.routeName: (context) => ChildDetailScreen(),
 };
-
-

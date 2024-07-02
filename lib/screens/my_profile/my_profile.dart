@@ -2,19 +2,99 @@ import 'package:flutter_first_project/constante.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_first_project/screens/home_screen/home_screen.dart';
 import 'package:sizer/sizer.dart';
+import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:flutter_first_project/constante.dart';
+import 'package:flutter_first_project/screens/home_screen/home_screen.dart';
+import 'package:http/http.dart' as http;
+import 'package:sizer/sizer.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_first_project/screens/home_screen/home_screen.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:sizer/sizer.dart';
+
+//the get work butthe ui is like shit
 
 class MyProfileScreen extends StatefulWidget {
+  static const String routeName = 'MyProfileScreen';
+
   const MyProfileScreen({Key? key}) : super(key: key);
-  static String routeName = 'MyProfileScreen';
 
   @override
   State<MyProfileScreen> createState() => _MyProfileScreenState();
 }
 
 class _MyProfileScreenState extends State<MyProfileScreen> {
-  //
+  late Map<String, dynamic> teacherDetails;
+  late TextEditingController emailController;
+  late TextEditingController telephoneController;
+  late TextEditingController adresseController;
+  late TextEditingController dateNaissanceController;
+  late TextEditingController lieuNaissanceController;
+  late String id;
   DateTime? selectedDate;
-  //
+
+  @override
+  void initState() {
+    super.initState();
+    teacherDetails = {};
+    emailController = TextEditingController();
+    telephoneController = TextEditingController();
+    adresseController = TextEditingController();
+    dateNaissanceController = TextEditingController();
+    lieuNaissanceController = TextEditingController();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Fetch teacher details based on route arguments
+    final args =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?;
+    id = args?['id'] ?? '';
+    fetchTeacherDetails();
+  }
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    telephoneController.dispose();
+    adresseController.dispose();
+    dateNaissanceController.dispose();
+    lieuNaissanceController.dispose();
+    super.dispose();
+  }
+
+  Future<void> fetchTeacherDetails() async {
+    try {
+      final response = await http.get(
+        Uri.parse(
+            'http://localhost/Tunisia_Learning_backend/TunisiaLearningPhp/get_profil_teacher.php?id=$id'),
+      );
+
+      if (response.statusCode == 200) {
+        setState(() {
+          teacherDetails = json.decode(response.body)['data'];
+          emailController.text = teacherDetails['email'] ?? '';
+          telephoneController.text = teacherDetails['telephone'] ?? '';
+          adresseController.text = teacherDetails['adresse'] ?? '';
+          dateNaissanceController.text = teacherDetails['date_naissance'] ?? '';
+          lieuNaissanceController.text = teacherDetails['lieu_naissance'] ?? '';
+
+          // Initialize selectedDate with the fetched date_naissance
+          selectedDate =
+              DateTime.tryParse(teacherDetails['date_naissance'] ?? '');
+        });
+      } else {
+        throw Exception('Failed to load teacher details');
+      }
+    } catch (e) {
+      print('Exception while fetching teacher details: $e');
+      // Handle error as needed
+    }
+  }
+
   //
 // Define a custom SnackBar
   void _showSnackBar(BuildContext context, String message) {
@@ -69,16 +149,12 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
     if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;
+        dateNaissanceController.text =
+            "${selectedDate!.year}-${selectedDate!.month.toString().padLeft(2, '0')}-${selectedDate!.day.toString().padLeft(2, '0')}";
       });
     }
-    //
-    /*if (picked != null && picked != DateTime.now()) {
-      // Handle the selected date (you might want to setState or similar in a StatefulWidget)
-      print(picked.toLocal().toString());
-    }*/
   }
 
-  //5alyha
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -141,9 +217,9 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                   CircleAvatar(
                     radius:
                         SizerUtil.deviceType == DeviceType.tablet ? 12.w : 13.w,
-                    backgroundColor: kSecondaryColor,
+                    backgroundColor: Color.fromARGB(255, 229, 231, 196),
                     backgroundImage:
-                        AssetImage('assets/images/student_profile.jpeg'),
+                        AssetImage('assets/images/teacher_profil.png'),
                   ),
                   kWidthSizedBox,
                   Column(
@@ -151,11 +227,13 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'Aisha Mirza',
-                        style: Theme.of(context).textTheme.subtitle1,
+                        '${teacherDetails['nom']} ${teacherDetails['prenom']}',
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleMedium
+                            ?.copyWith(
+                                color: Color.fromARGB(255, 236, 237, 217)),
                       ),
-                      Text('Class X-II A | Roll no: 12',
-                          style: Theme.of(context).textTheme.subtitle2),
                     ],
                   )
                 ],
@@ -170,12 +248,12 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
               children: [
                 ProfileDetailRow(
                   title: 'Nom',
-                  value: 'KNANI SOUII',
+                  value: teacherDetails['nom'] ?? '',
                   editable: true,
                 ),
                 ProfileDetailRow(
                   title: 'Prènom',
-                  value: 'SIHEM',
+                  value: teacherDetails['prenom'] ?? '',
                   editable: true,
                 ),
               ],
@@ -185,19 +263,16 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
               children: [
                 ProfileDetailRow(
                   title: 'Date de naissance',
-                  value:
-                      //
-                      selectedDate != null
-                          ? "${selectedDate!.month}/${selectedDate!.day}/${selectedDate!.year}"
-                          : 'Select date',
-                  // '03/27/1979',
+                  value: selectedDate != null
+                      ? "${selectedDate!.month}/${selectedDate!.day}/${selectedDate!.year}"
+                      : teacherDetails['date_naissance'] ?? 'Select date',
                   editable: true,
                   icon: Icons.calendar_today,
                   onIconTap: () => _selectDate(context),
                 ),
                 ProfileDetailRow(
                   title: 'Lieu de naissance',
-                  value: 'sousse',
+                  value: teacherDetails['lieu_naissance'] ?? '',
                   editable: true,
                 ),
               ],
@@ -206,22 +281,23 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
             sizedBox,
             ProfileDetailColumn(
               title: 'Email',
-              value: 'aisha12@gmail.com',
+              value: teacherDetails['email'] ?? '',
               editable: true,
             ),
             ProfileDetailColumn(
               title: 'Mot de passe',
-              value: 'RCo4CjKP11',
+              value: teacherDetails['motdepasse'] ?? '',
+
               editable: false, // Make it uneditable
             ),
             ProfileDetailColumn(
               title: 'Téléphone',
-              value: '21230405',
+              value: teacherDetails['telephone'] ?? '',
               editable: true,
             ),
             ProfileDetailColumn(
               title: 'Adresse',
-              value: 'Sousse',
+              value: teacherDetails['adresse'] ?? '',
               editable: true,
             ),
             //button enregister
@@ -288,14 +364,11 @@ class ProfileDetailRow extends StatefulWidget {
   @override
   State<ProfileDetailRow> createState() => _ProfileDetailRowState();
 }
-//tbadel kan statefull
 
 class _ProfileDetailRowState extends State<ProfileDetailRow> {
-//tbadel hathou mzoz ne9sa }
   late TextEditingController _controller;
   bool _isEditing = false;
-//
-//
+
   @override
   void initState() {
     super.initState();
@@ -353,48 +426,80 @@ class _ProfileDetailRowState extends State<ProfileDetailRow> {
 
               //shenzydo gesture detector
               GestureDetector(
-                onTap: widget.editable ? _startEditing : null,
-                child: _isEditing
-                    ? SizedBox(
-                        width: 100.w - 60.w, // Adjust width as needed
-                        child: TextFormField(
-                          controller: _controller,
-                          style: Theme.of(context).textTheme.caption,
-                          cursorColor: Colors.blue,
-                          decoration: InputDecoration(
-                            isDense: true,
-                            contentPadding: EdgeInsets.symmetric(
-                                vertical: 8.sp, horizontal: 12.sp),
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5.sp)),
-                          ),
-                          keyboardType: TextInputType
-                              .text, // Adjust keyboardType as needed
-                          autofocus: true,
-                          maxLines: 1, // Adjust maxLines as needed
-                          textAlign: TextAlign.start,
-                          readOnly: !widget.editable,
-                          onFieldSubmitted: (_) => _saveChanges(),
-                        ),
-                      )
-
-                    //nzydo : fema) ne9es
-                    : Row(
+                onTap:
+                    //widget.editable ? _startEditing : null,
+                    widget.editable && widget.title != 'Mot de passe'
+                        ? _startEditing
+                        : null,
+                child: widget.title == 'Mot de passe'
+                    ? Row(
                         children: [
-                          Text(widget.value,
-                              style: Theme.of(context).textTheme.caption),
-                          if (widget.title == 'Date de naissance') ...[
-                            SizedBox(width: 8),
-                            GestureDetector(
-                              onTap: widget.onIconTap,
-                              child: Icon(
-                                Icons.calendar_today,
-                                size: 14.sp,
-                              ),
-                            ),
-                          ]
+                          Text(
+                            widget.value,
+                            style: Theme.of(context)
+                                .textTheme
+                                .caption
+                                ?.copyWith(
+                                  fontSize: 20, // Customize the value text size
+                                ),
+                          ),
+                          SizedBox(
+                            width: 8,
+                          ),
+                          Icon(
+                            Icons.lock_outline,
+                            size: 14.sp,
+                          ),
                         ],
-                      ),
+                      )
+                    : _isEditing
+                        ? SizedBox(
+                            width: 100.w - 60.w, // Adjust width as needed
+                            child: TextFormField(
+                              controller: _controller,
+                              style: Theme.of(context).textTheme.caption,
+                              cursorColor: Colors.blue,
+                              decoration: InputDecoration(
+                                isDense: true,
+                                contentPadding: EdgeInsets.symmetric(
+                                    vertical: 8.sp, horizontal: 12.sp),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5.sp)),
+                              ),
+                              keyboardType: TextInputType
+                                  .text, // Adjust keyboardType as needed
+                              autofocus: true,
+                              maxLines: 1, // Adjust maxLines as needed
+                              textAlign: TextAlign.start,
+                              readOnly: !widget.editable,
+                              onFieldSubmitted: (_) => _saveChanges(),
+                            ),
+                          )
+
+                        //nzydo : fema) ne9es
+                        : Row(
+                            children: [
+                              Text(
+                                widget.value,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall
+                                    ?.copyWith(
+                                        fontSize: 19,
+                                        color: Color.fromARGB(255, 99, 98, 98)),
+                              ),
+                              if (widget.title == 'Date de naissance') ...[
+                                SizedBox(width: 8),
+                                GestureDetector(
+                                  onTap: widget.onIconTap,
+                                  child: Icon(
+                                    Icons.calendar_today,
+                                    size: 14.sp,
+                                  ),
+                                ),
+                              ]
+                            ],
+                          ),
 //haweha close gesture detectore )
               ),
               SizedBox(
@@ -405,8 +510,8 @@ class _ProfileDetailRowState extends State<ProfileDetailRow> {
               ),
             ],
           ),
-          if (widget.title ==
-              'Mot de passe') // Only show lock icon for 'Mot de passe'
+          if (widget.title == 'Mot de passe')
+            // Only show lock icon for 'Mot de passe'
             Icon(
               Icons.lock_outline,
               size: 10.sp,
@@ -519,8 +624,12 @@ class _ProfileDetailColumnState extends State<ProfileDetailColumn> {
                       )
                     //ne9sa ) te3 gestur
 
-                    : Text(widget.value,
-                        style: Theme.of(context).textTheme.caption),
+                    : Text(
+                        widget.value,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            fontSize: 19,
+                            color: Color.fromARGB(255, 99, 98, 98)),
+                      ),
                 //gestur close
               ),
               //
