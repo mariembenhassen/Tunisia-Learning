@@ -6,11 +6,6 @@ import 'package:sizer/sizer.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
-import 'package:flutter/material.dart';
-import 'package:flutter_first_project/screens/home_screen/child_detail_screen.dart';
-import 'package:flutter_first_project/screens/login_screen/login_screen.dart';
-import 'package:flutter_first_project/constante.dart';
-import 'package:sizer/sizer.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
@@ -95,7 +90,7 @@ class _ParentHomeScreenState extends State<ParentHomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: kPrimaryColor,
+        backgroundColor: Color(0xFF345FB4),
         title: Text(
           'Tunisia Learning',
           style: Theme.of(context).textTheme.headline6!.copyWith(
@@ -147,7 +142,7 @@ class _ParentHomeScreenState extends State<ParentHomeScreen> {
           Container(
             width: MediaQuery.of(context).size.width,
             padding: EdgeInsets.all(20.0),
-            color: kPrimaryColor,
+            color: Color(0xFF345FB4),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -246,7 +241,7 @@ class HomeCard extends StatelessWidget {
       onTap: onPress,
       child: Container(
         decoration: BoxDecoration(
-          color: kPrimaryColor,
+          color: Color(0xFF345FB4),
           borderRadius: BorderRadius.circular(20.0),
         ),
         child: Column(

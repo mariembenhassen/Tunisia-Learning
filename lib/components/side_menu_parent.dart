@@ -2,6 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_first_project/screens/my_profile/my_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_first_project/screens/home_screen/home_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_first_project/screens/my_profile/my_profile.dart';
+import 'package:flutter_first_project/screens/home_screen/home_screen.dart';
 
 //stf
 class SideMenu extends StatefulWidget {
@@ -37,7 +40,7 @@ class SideMenuState extends State<SideMenu> {
               child: ListView(
                 padding: EdgeInsets.zero,
                 children: [
-                  UserAccountsDrawerHeader(
+                  /*  UserAccountsDrawerHeader(
                     accountName: Text(
                       'mariem ben hassen',
                       style: TextStyle(
@@ -69,7 +72,7 @@ class SideMenuState extends State<SideMenu> {
                       color: Colors.white12,
                     ),
                   ),
-
+*/
                   //home part
                   ListTile(
                     leading: Icon(
@@ -157,27 +160,6 @@ class SideMenuState extends State<SideMenu> {
                         ),
                       ),
                     ),
-                  ),
-
-                  //modifier profile
-                  ListTile(
-                    leading: Icon(
-                      Icons.manage_accounts_rounded,
-                      color: const Color.fromARGB(255, 0, 0, 0),
-                      size: 25,
-                    ),
-                    title: Text(
-                      "Accés et Coordonnés",
-                      style: TextStyle(
-                          color: const Color.fromARGB(255, 0, 0, 0),
-                          fontSize: 20,
-                          fontWeight: FontWeight.normal),
-                    ),
-                    //   onTap: () => Navigator.push(
-                    // context,
-                    // MaterialPageRoute(
-                    //   builder: (context) => MyProfileScreen()),
-                    //  ),
                   ),
                 ],
               ),

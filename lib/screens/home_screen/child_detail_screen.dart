@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_first_project/components/side_menu_parent.dart';
+import 'package:flutter_first_project/screens/emploi_du_temps_screen/emploi_du_temps_screen.dart';
 import 'package:flutter_first_project/screens/login_screen/login_screen.dart';
 import 'package:flutter_first_project/constante.dart';
 import 'package:flutter_svg/svg.dart';
@@ -11,8 +12,21 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_first_project/components/side_menu_parent.dart';
+import 'package:flutter_first_project/screens/login_screen/login_screen.dart';
 
- class ChildDetailScreen extends StatelessWidget {
+import 'package:flutter_first_project/constante.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:sizer/sizer.dart';
+import 'package:http/http.dart' as http;
+import 'dart:async';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+class ChildDetailScreen extends StatelessWidget {
   static const routeName = 'ChildDetailScreen';
 
   final String apiUrl =
@@ -274,7 +288,19 @@ import 'dart:convert';
                               title: 'Demande D\'absences',
                             ),
                             HomeCard(
-                              onPress: () {},
+                              onPress: () {
+                                Navigator.pushNamed(
+                                    context, EmploiDuTempsScreen.routeName,
+                                    arguments: {
+                                      'idetablissement':
+                                          childData['idetablissement']
+                                              .toString(),
+                                      'idniveau':
+                                          childData['idniveau'].toString(),
+                                      'idclasse':
+                                          childData['idclasse'].toString(),
+                                    });
+                              },
                               icon: 'assets/icons/timetable.svg',
                               title: 'Emploi du temps',
                             ),
@@ -303,13 +329,16 @@ import 'dart:convert';
                           children: [
                             HomeCard(
                               onPress: () {},
-                              icon: 'assets/icons/ask.svg',
-                              title: 'Poser une question',
+                              icon: 'assets/icons/result.svg',
+                              title: 'Résultats',
                             ),
                             HomeCard(
-                              onPress: () {},
-                              icon: 'assets/icons/logout.svg',
-                              title: 'Déconnexion',
+                              onPress: () {
+                                // Navigator.pushNamed(
+                                // context, DateSheetScreen.routeName);
+                              },
+                              icon: 'assets/icons/datesheet.svg',
+                              title: 'Feuille de date',
                             ),
                           ],
                         ),
@@ -325,6 +354,7 @@ import 'dart:convert';
     );
   }
 }
+
 
 class HomeCard extends StatelessWidget {
   const HomeCard({

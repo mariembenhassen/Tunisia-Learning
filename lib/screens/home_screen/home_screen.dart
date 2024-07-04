@@ -45,7 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
       // Replace with your actual endpoint URL
       final response = await http.get(
         Uri.parse(
-            'http://localhost/Tunisia_Learning_backend/TunisiaLearningPhp/get_teacher_detail.php?id=1'),
+            'http://localhost/Tunisia_Learning_backend/TunisiaLearningPhp/get_teacher_detail.php?id=id'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
