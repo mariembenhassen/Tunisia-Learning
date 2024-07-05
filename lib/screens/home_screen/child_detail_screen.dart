@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_first_project/components/side_menu_parent.dart';
+import 'package:flutter_first_project/screens/assignment_screen/course_list_screen.dart';
+import 'package:flutter_first_project/screens/data/course_model.dart';
 import 'package:flutter_first_project/screens/emploi_du_temps_screen/emploi_du_temps_screen.dart';
 import 'package:flutter_first_project/screens/login_screen/login_screen.dart';
 import 'package:flutter_first_project/constante.dart';
@@ -270,9 +272,16 @@ class ChildDetailScreen extends StatelessWidget {
                             ),
                             HomeCard(
                               onPress: () {
-                                // Navigate to course and exercise screen
-                                // Navigator.pushNamed(
-                                // context, CourseExerciseScreen.routeName);
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => CourseScreen(
+                                      idEtablissement: 1,
+                                      idNiveau: 2,
+                                      idClasse: 2,
+                                    ),
+                                  ),
+                                );
                               },
                               icon: 'assets/icons/assignment.svg',
                               title: 'Cours et exercice',
@@ -354,7 +363,6 @@ class ChildDetailScreen extends StatelessWidget {
     );
   }
 }
-
 
 class HomeCard extends StatelessWidget {
   const HomeCard({

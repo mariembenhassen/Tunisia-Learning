@@ -1,3 +1,4 @@
+import 'package:flutter_first_project/screens/assignment_screen/course_list_screen.dart';
 import 'package:flutter_first_project/screens/emploi_du_temps_screen/emploi_du_temps_screen.dart';
 import 'package:flutter_first_project/screens/home_screen/child_detail_screen.dart';
 import 'package:flutter_first_project/screens/home_screen/parent_home_screen.dart';
@@ -15,4 +16,5 @@ Map<String, WidgetBuilder> routes = {
   ParentHomeScreen.routeName: (context) => ParentHomeScreen(),
   ChildDetailScreen.routeName: (context) => ChildDetailScreen(),
   EmploiDuTempsScreen.routeName: (context) => EmploiDuTempsScreen(),
+  //CourseScreen.routeName: (context) => CourseScreen()
 };
