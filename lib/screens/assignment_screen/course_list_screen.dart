@@ -42,7 +42,23 @@ class _CourseScreenState extends State<CourseScreen> {
       widget.idClasse,
     );
   }
+  Future<List<Course>> fetchCourses(
+    int idEtablissement, int idNiveau, int idClasse) async {
+  final baseUrl = 'http://localhost/Tunisia_Learning_backend/TunisiaLearningPhp/get_exercours.php';
+  final url = Uri.parse('$baseUrl?idetablissement=$idEtablissement&idniveau=$idNiveau&idclasse=$idClasse');
 
+  final response = await http.get(url);
+
+  if (response.statusCode == 200) {
+    String responseBody = utf8.decode(response.bodyBytes).trim();
+    List<dynamic> jsonResponse = json.decode(responseBody);
+    return jsonResponse.map((course) => Course.fromJson(course)).toList();
+  } else {
+    throw Exception('Failed to load courses: ${response.statusCode}');
+  }
+}
+
+/*
   Future<List<Course>> fetchCourses(
       int idEtablissement, int idNiveau, int idClasse) async {
     final url =
@@ -57,7 +73,7 @@ class _CourseScreenState extends State<CourseScreen> {
     } else {
       throw Exception('Failed to load courses: ${response.statusCode}');
     }
-  }
+  }*/
 
   // Function to launch URL
   void _launchURL(String url) async {

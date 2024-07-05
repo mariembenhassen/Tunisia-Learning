@@ -276,12 +276,24 @@ class ChildDetailScreen extends StatelessWidget {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => CourseScreen(
+                                      idEtablissement:
+                                          childData['idetablissement'],
+                                      idNiveau: childData['idniveau'],
+                                      idClasse: childData['idclasse'],
+                                    ),
+                                  ),
+                                );
+
+                                /*Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => CourseScreen(
                                       idEtablissement: 1,
                                       idNiveau: 2,
                                       idClasse: 2,
                                     ),
                                   ),
-                                );
+                                );*/
                               },
                               icon: 'assets/icons/assignment.svg',
                               title: 'Cours et exercice',
