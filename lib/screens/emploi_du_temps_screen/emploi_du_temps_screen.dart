@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_first_project/constante.dart';
+import 'package:flutter_first_project/screens/login_screen/login_screen.dart';
 
 
 import 'package:http/http.dart' as http;
@@ -87,6 +88,37 @@ class EmploiDuTempsScreen extends StatelessWidget {
                 color: Colors.white,
               ),
         ),
+                actions: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: PopupMenuButton<String>(
+              onSelected: (String result) {
+                if (result == 'logout') {
+                  // Handle logout action
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, LoginScreen.routeName, (route) => false);
+                }
+              },
+              offset: Offset(0, 50),
+              itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                PopupMenuItem<String>(
+                  value: 'logout',
+                  child: Row(
+                    children: [
+                      Icon(Icons.logout, color: Colors.black54),
+                      SizedBox(width: 10),
+                      Text('Déconnexion'),
+                    ],
+                  ),
+                ),
+              ],
+              icon: Icon(
+                Icons.account_circle_sharp,
+                size: 30,
+              ),
+            ),
+          ),
+        ],
       ),
       body: FutureBuilder<List<Map<String, dynamic>>>(
         future: futureEmploiDuTemps,
