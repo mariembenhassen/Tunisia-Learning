@@ -16,5 +16,6 @@ Map<String, WidgetBuilder> routes = {
   ParentHomeScreen.routeName: (context) => ParentHomeScreen(),
   ChildDetailScreen.routeName: (context) => ChildDetailScreen(),
   EmploiDuTempsScreen.routeName: (context) => EmploiDuTempsScreen(),
-  //CourseScreen.routeName: (context) => CourseScreen()
+ // CourseScreen.routeName: (context) => CourseScreen()
+ //CourseScreen.routeName: (context) => CourseScreen(),
 };

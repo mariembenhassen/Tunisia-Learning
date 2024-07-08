@@ -1,12 +1,11 @@
-import 'dart:convert';
+/*import 'dart:convert';
 import 'package:flutter_first_project/screens/data/course_model.dart';
 import 'package:http/http.dart' as http;
 
 Future<List<Course>> fetchCourses(
     int idEtablissement, int idNiveau, int idClasse) async {
   final url =
-      'http://localhost/Tunisia_Learning_backend/TunisiaLearningPhp/get_exercours.php?idetablissement=2&idniveau=1&idclasse=2';
-
+      'http://localhost/Tunisia_Learning_backend/TunisiaLearningPhp/get_exercours.php?idetablissement=$idEtablissement&idniveau=$idNiveau&idclasse=$idClasse';
   final response = await http.get(Uri.parse(url));
 
   if (response.statusCode == 200) {
@@ -17,3 +16,4 @@ Future<List<Course>> fetchCourses(
     throw Exception('Failed to load courses: ${response.statusCode}');
   }
 }
+*/

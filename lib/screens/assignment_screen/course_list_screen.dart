@@ -2,12 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_first_project/constante.dart';
 import 'package:flutter_first_project/screens/data/course_model.dart';
 import 'package:flutter_first_project/screens/login_screen/login_screen.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:flutter/material.dart';
-import 'package:flutter_first_project/screens/data/course_model.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_first_project/screens/data/course_model.dart';
@@ -16,6 +10,7 @@ import 'dart:convert';
 import 'package:url_launcher/url_launcher.dart';
 
 class CourseScreen extends StatefulWidget {
+  static const routeName = 'CourseScreen';
   final int idEtablissement;
   final int idNiveau;
   final int idClasse;
@@ -42,29 +37,13 @@ class _CourseScreenState extends State<CourseScreen> {
       widget.idClasse,
     );
   }
-  Future<List<Course>> fetchCourses(
-    int idEtablissement, int idNiveau, int idClasse) async {
-  final baseUrl = 'http://localhost/Tunisia_Learning_backend/TunisiaLearningPhp/get_exercours.php';
-  final url = Uri.parse('$baseUrl?idetablissement=$idEtablissement&idniveau=$idNiveau&idclasse=$idClasse');
 
-  final response = await http.get(url);
-
-  if (response.statusCode == 200) {
-    String responseBody = utf8.decode(response.bodyBytes).trim();
-    List<dynamic> jsonResponse = json.decode(responseBody);
-    return jsonResponse.map((course) => Course.fromJson(course)).toList();
-  } else {
-    throw Exception('Failed to load courses: ${response.statusCode}');
-  }
-}
-
-/*
   Future<List<Course>> fetchCourses(
       int idEtablissement, int idNiveau, int idClasse) async {
-    final url =
-        'http://localhost/Tunisia_Learning_backend/TunisiaLearningPhp/get_exercours.php?idetablissement=2&idniveau=1&idclasse=2';
+    final baseUrl =
+        'http://localhost/Tunisia_Learning_backend/TunisiaLearningPhp/get_exercours.php?idetablissement=$idEtablissement&idniveau=$idNiveau&idclasse=$idClasse';
 
-    final response = await http.get(Uri.parse(url));
+    final response = await http.get(Uri.parse(baseUrl));
 
     if (response.statusCode == 200) {
       String responseBody = utf8.decode(response.bodyBytes).trim();
@@ -73,7 +52,7 @@ class _CourseScreenState extends State<CourseScreen> {
     } else {
       throw Exception('Failed to load courses: ${response.statusCode}');
     }
-  }*/
+  }
 
   // Function to launch URL
   void _launchURL(String url) async {

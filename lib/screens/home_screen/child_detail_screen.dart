@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -12,21 +14,6 @@ import 'package:sizer/sizer.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_first_project/components/side_menu_parent.dart';
-import 'package:flutter_first_project/screens/login_screen/login_screen.dart';
-
-import 'package:flutter_first_project/constante.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:sizer/sizer.dart';
-import 'package:http/http.dart' as http;
-import 'dart:async';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class ChildDetailScreen extends StatelessWidget {
   static const routeName = 'ChildDetailScreen';
@@ -153,38 +140,51 @@ class ChildDetailScreen extends StatelessWidget {
                       Row(
                         children: [
                           Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                            // Left column for text information
+
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
                                 'Élève:',
-                                style: TextStyle(fontSize: 10),
+                                style: TextStyle(fontSize: 12),
                               ),
                               Text(
                                 ' ${childData['nom']} ${childData['prenom']}',
-                                style: TextStyle(fontSize: 10),
+                                style: TextStyle(fontSize: 14),
                               ),
+                              SizedBox(height: 8), // Add space between elements
                               Text(
                                 'Nom d\'utilisateur:',
-                                style: TextStyle(fontSize: 10),
+                                style: TextStyle(fontSize: 12),
                               ),
+
                               Text(
                                 '${childData['tuteur_nomprenom']}',
-                                style: TextStyle(fontSize: 10),
+                                style: TextStyle(fontSize: 14),
                               ),
+                              SizedBox(height: 8), // Add space between elements
                               Text(
                                 'École:',
-                                style: TextStyle(fontSize: 10),
+                                style: TextStyle(fontSize: 12),
                               ),
                               Text(
                                 '${childData['etablissement_nom']}',
-                                style: TextStyle(fontSize: 10),
+                                style: TextStyle(fontSize: 14),
                               ),
                             ],
                           ),
+                          Spacer(),
+                          CircleAvatar(
+                            radius: SizerUtil.deviceType == DeviceType.tablet
+                                ? 60
+                                : 50,
+                            backgroundColor: Color.fromARGB(255, 204, 238, 230),
+                            backgroundImage:
+                                AssetImage('assets/images/reading.png'),
+                          ),
                         ],
                       ),
-                      SizedBox(height: kDefaultPadding / 8),
+                      SizedBox(height: kDefaultPadding / 2),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
@@ -217,6 +217,7 @@ class ChildDetailScreen extends StatelessWidget {
                               ],
                             ),
                           ),
+                          SizedBox(height: kDefaultPadding / 2),
                           Container(
                             width: MediaQuery.of(context).size.width / 2.5,
                             height: MediaQuery.of(context).size.height / 10,
@@ -283,17 +284,6 @@ class ChildDetailScreen extends StatelessWidget {
                                     ),
                                   ),
                                 );
-
-                                /*Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => CourseScreen(
-                                      idEtablissement: 1,
-                                      idNiveau: 2,
-                                      idClasse: 2,
-                                    ),
-                                  ),
-                                );*/
                               },
                               icon: 'assets/icons/assignment.svg',
                               title: 'Cours et exercice',

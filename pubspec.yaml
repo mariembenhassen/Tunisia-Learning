@@ -70,6 +70,7 @@ flutter:
   assets:
       - assets/images/
       - assets/icons/
+      - assets/images/reading-book.png
 
 
   #   - images/a_dot_burr.jpeg
