@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_first_project/components/side_menu_parent.dart';
+import 'package:flutter_first_project/screens/Messagerie_screen/Parent_Messagerie_screen.dart';
 import 'package:flutter_first_project/screens/assignment_screen/course_list_screen.dart';
 import 'package:flutter_first_project/screens/data/course_model.dart';
 import 'package:flutter_first_project/screens/emploi_du_temps_screen/emploi_du_temps_screen.dart';
@@ -39,7 +40,7 @@ class ChildDetailScreen extends StatelessWidget {
     final Map<String, dynamic>? args =
         ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
 
-    if (args == null || args['child'] == null) {
+    if (args == null || args['child'] == null || args['parentId'] == null) {
       // Handle if no child data is passed
       return Scaffold(
         appBar: AppBar(
@@ -53,6 +54,8 @@ class ChildDetailScreen extends StatelessWidget {
 
     final int childId =
         int.parse(args['child']['id'].toString()); // Convert id to integer
+    final int parentId =
+        int.parse(args['parentId'].toString()); // Extract parent ID
 
     late Future<Map<String, dynamic>> futureChildDetails =
         fetchChildDetails(childId);
@@ -173,7 +176,8 @@ class ChildDetailScreen extends StatelessWidget {
                               ),
                             ],
                           ),
-                          Spacer(),
+                          SizedBox(width: 35.0),
+                          //Spacer(),
                           CircleAvatar(
                             radius: SizerUtil.deviceType == DeviceType.tablet
                                 ? 60
@@ -267,7 +271,17 @@ class ChildDetailScreen extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             HomeCard(
-                              onPress: () {},
+                              onPress: () {
+                                Navigator.pushNamed(
+                                    context, ParentMessagingPage.routeName,
+                                    arguments: {
+                                      'iduser': parentId,
+                                      'idetablissement':
+                                          childData['idetablissement'],
+                                      'idNiveau': childData['idniveau'],
+                                      'idClasse': childData['idclasse'],
+                                    });
+                              },
                               icon: 'assets/icons/ask.svg',
                               title: 'Messagerie',
                             ),

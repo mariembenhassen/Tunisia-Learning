@@ -5,6 +5,7 @@ import 'package:flutter_first_project/screens/home_screen/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_first_project/screens/my_profile/my_profile.dart';
 import 'package:flutter_first_project/screens/home_screen/home_screen.dart';
+import 'package:sizer/sizer.dart';
 
 //stf
 class SideMenu extends StatefulWidget {
@@ -21,12 +22,13 @@ class SideMenuState extends State<SideMenu> {
       body: Container(
         width: 288,
         height: double.infinity,
-        color: Colors.white,
+        color: Color.fromARGB(255, 124, 183, 142),
         child: Column(
           children: [
             //
             // Close Button
             Align(
+            
               alignment: Alignment.topRight,
               child: IconButton(
                 icon: Icon(Icons.close),
@@ -40,6 +42,28 @@ class SideMenuState extends State<SideMenu> {
               child: ListView(
                 padding: EdgeInsets.zero,
                 children: [
+                  UserAccountsDrawerHeader(
+                    accountName: null,
+                    /*Text(
+                    '${widget.prenom} ${widget.nom}',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),*/
+                    currentAccountPicture: CircleAvatar(
+                      radius: SizerUtil.deviceType == DeviceType.tablet
+                          ? 12.w
+                          : 13.w,
+                      backgroundColor: Color.fromARGB(255, 204, 238, 230),
+                      backgroundImage: AssetImage('assets/images/reading.png'),
+                    ),
+                    decoration: BoxDecoration(
+                      color: Color.fromARGB(251, 197, 238, 184),
+                    ),
+                    accountEmail: null,
+                  ),
+
                   /*  UserAccountsDrawerHeader(
                     accountName: Text(
                       'mariem ben hassen',
@@ -53,13 +77,7 @@ class SideMenuState extends State<SideMenu> {
                       style: TextStyle(
                           color: Colors.black, fontWeight: FontWeight.normal),
                     ),
-                    currentAccountPicture: Icon(
-                      Icons.account_circle_sharp,
-                      size: 50,
-                      color: Color.fromARGB(255, 44, 78, 181),
-
-                      // Colors.white,
-                    ),
+                   
                     //this if you want to add an image as a cover
                     /* decoration: BoxDecoration(
                       image: DecorationImage(

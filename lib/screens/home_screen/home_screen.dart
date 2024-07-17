@@ -4,6 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_first_project/components/side_menu.dart';
 import 'package:flutter_first_project/constante.dart';
+import 'package:flutter_first_project/screens/Messagerie_screen/Parent_Messagerie_screen.dart';
+import 'package:flutter_first_project/screens/Messagerie_screen/Teacher_Messagerie_screen.dart';
 import 'package:flutter_first_project/screens/login_screen/login_screen.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:http/http.dart' as http;
@@ -247,7 +249,17 @@ class _HomeScreenState extends State<HomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         HomeCard(
-                          onPress: () {},
+                          onPress: () {
+                            Navigator.pushNamed(
+                                context, TeacherMessagingPage.routeName,
+                                arguments: {
+                                  'iduser': int.parse(teacherDetails.id
+                                      .toString()), // Ensure it's an integer
+                                  'idetablissement': int.parse(teacherDetails
+                                      .idEtablissement
+                                      .toString()), // Ensure it's an integer
+                                });
+                          },
                           icon: 'assets/icons/ask.svg',
                           title: 'Messagerie',
                         ),

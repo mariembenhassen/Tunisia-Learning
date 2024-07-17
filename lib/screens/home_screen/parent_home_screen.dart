@@ -174,7 +174,6 @@ class _ParentHomeScreenState extends State<ParentHomeScreen> {
                             )),
                   ],
                 ),
-                
               ],
             ),
           ),
@@ -221,7 +220,7 @@ class _ParentHomeScreenState extends State<ParentHomeScreen> {
     Navigator.pushNamed(
       context,
       ChildDetailScreen.routeName,
-      arguments: {'child': child},
+      arguments: {'child': child, 'parentId': id},
     );
   }
 }

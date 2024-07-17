@@ -1,3 +1,6 @@
+import 'package:flutter_first_project/screens/Messagerie_screen/Parent_Messagerie_screen.dart';
+import 'package:flutter_first_project/screens/Messagerie_screen/Parent_mesaages/send.dart';
+import 'package:flutter_first_project/screens/Messagerie_screen/Teacher_Messagerie_screen.dart';
 import 'package:flutter_first_project/screens/assignment_screen/course_list_screen.dart';
 import 'package:flutter_first_project/screens/emploi_du_temps_screen/emploi_du_temps_screen.dart';
 import 'package:flutter_first_project/screens/home_screen/child_detail_screen.dart';
@@ -16,6 +19,9 @@ Map<String, WidgetBuilder> routes = {
   ParentHomeScreen.routeName: (context) => ParentHomeScreen(),
   ChildDetailScreen.routeName: (context) => ChildDetailScreen(),
   EmploiDuTempsScreen.routeName: (context) => EmploiDuTempsScreen(),
- // CourseScreen.routeName: (context) => CourseScreen()
- //CourseScreen.routeName: (context) => CourseScreen(),
+  // CourseScreen.routeName: (context) => CourseScreen()
+  //CourseScreen.routeName: (context) => CourseScreen(),
+  ParentMessagingPage.routeName: (context) => ParentMessagingPage(),
+  TeacherMessagingPage.routeName: (context) => TeacherMessagingPage(),
+  MessageSendingPage.routeName: (context) => MessageSendingPage(),
 };
