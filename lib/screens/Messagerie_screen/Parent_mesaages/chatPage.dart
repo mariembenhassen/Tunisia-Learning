@@ -1,4 +1,4 @@
-import 'dart:convert';
+/*import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -129,7 +129,6 @@ class _ChatScreenState extends State<ChatScreen> {
               },
             ),
 
-            
           ),
           Container(
             padding: EdgeInsets.all(10),
@@ -140,6 +139,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     controller: messageController,
                     decoration: InputDecoration(
                       hintText: 'Type a message...',
+                  
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(30),
                       ),
@@ -166,4 +166,4 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 }
-
+*/

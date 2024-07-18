@@ -223,7 +223,6 @@ class _MessageSendingPageState extends State<MessageSendingPage> {
               selectedIndex: 2,
               onTabChange: (index) {
                 if (index == 1) {
-                  
                 } else if (index == 0) {
                   Navigator.of(context).pop();
                 }

@@ -137,114 +137,157 @@ class _ParentMessagingPageState extends State<ParentMessagingPage> {
     }
   }
 
-/*
-  void openBottomSheet(Map<String, dynamic> message) {
+  void openBottomSheet(Map<String, dynamic> message, int idUser) {
+    TextEditingController responseController = TextEditingController();
+
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
+      isScrollControlled: true,
       builder: (BuildContext bc) {
-        return Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Container(
-            height: 300.0, // Adjust the height as needed
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(30.0),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Row(
+        return DraggableScrollableSheet(
+          initialChildSize: 0.6,
+          minChildSize: 0.4,
+          maxChildSize: 0.9,
+          expand: false,
+          builder: (BuildContext context, ScrollController scrollController) {
+            return Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(30.0),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  "From: ${message['sender_name']}",
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16.0,
+                                  ),
+                                ),
+                                Text(
+                                  "Date: ${message['dateheure']}",
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 14.0,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.reply, color: Colors.blue),
+                            onPressed: () {
+                              // Handle reply action
+                            },
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 10.0),
+                      Text(
+                        "Message:",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18.0,
+                        ),
+                      ),
+                      SizedBox(height: 10.0),
                       Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(
-                              "From: ${message['sender_name']}",
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16.0,
-                              ),
+                        child: SingleChildScrollView(
+                          controller: scrollController,
+                          child: Text(
+                            message['mail'],
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 18.0,
                             ),
-                            Text(
-                              "Date: ${message['dateheure']}",
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 14.0,
-                              ),
-                            ),
-                          ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 10.0),
+                      TextField(
+                        controller: responseController,
+                        decoration: InputDecoration(
+                          
+                          hintText: 'Type your response here...',
+                          border: OutlineInputBorder(),
+                        ),
+                        style: TextStyle(
+                          color: Colors.black, // Sets the font color to black
+                        ),
+                        minLines: 3,
+                        maxLines: 5,
+                      ),
+                      SizedBox(height: 20.0),
+                      Align(
+                        alignment: Alignment.center,
+                        child: ElevatedButton.icon(
+                          onPressed: () async {
+                            String response = responseController.text;
+                            await sendResponse(
+                              idUser: idUser,
+                              selectedTeacherId: int.parse(message['idsender']),
+                              message: response,
+                            );
+                          },
+                          icon: Icon(Icons.send),
+                          label: Text('Répondre'),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blue,
+                            textStyle: TextStyle(fontSize: 16.0),
+                          ),
                         ),
                       ),
                     ],
                   ),
-                  SizedBox(
-                    height: 20.0,
-                  ),
-                  Text(
-                    "Message:",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18.0,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 10.0,
-                  ),
-                  Text(
-                    message['mail'],
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 18.0,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 30.0,
-                  ),
-                ],
+                ),
               ),
-            ),
-          ),
+            );
+          },
         );
       },
     );
-  }*/
-  /*
-void openChatScreen(Map<String, dynamic> message) {
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (context) => ChatScreen(
-        selectedTeacherId: message['idsender'] as int,
-        senderName: message['sender_name'],
-        idEtablissement: idEtablissement,
-        idUser:idUser,
-      ),
-    ),
-  );
-}*/
-
- void openChatScreen(Map<String, dynamic> message) {
-    int senderId = int.tryParse(message['idsender'].toString()) ?? 0;
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ChatScreen(
-          selectedTeacherId: senderId,
-          senderName: message['sender_name'],
-          idEtablissement: idEtablissement,
-          idUser: idUser,
-        ),
-      ),
-    );
   }
 
- 
+  Future<void> sendResponse(
+      {required int idUser,
+      required int selectedTeacherId,
+      required String message}) async {
+    final url = Uri.parse(
+        'http://localhost//Tunisia_Learning_backend/TunisiaLearningPhp/send_to_teacher.php');
+
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'idUser': idUser,
+        'selectedTeacherId': selectedTeacherId,
+        'message': message,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      print('Message sent successfully.');
+    } else {
+      print('Error: ${response.statusCode}');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final Map<String, dynamic>? args =
@@ -294,7 +337,6 @@ void openChatScreen(Map<String, dynamic> message) {
           ),
         ),
       ),
-      
       body: messages.isEmpty
           ? Center(child: CircularProgressIndicator())
           : ListView.builder(
@@ -309,7 +351,8 @@ void openChatScreen(Map<String, dynamic> message) {
                 return GestureDetector(
                   onTap: () {
                     // Handle tap action here, navigate to chat page or show details
-                    openChatScreen(message); // Example of opening bottom sheet
+                    openBottomSheet(message,
+                        idUser as int); // Example of opening bottom sheet
                   },
                   child: Container(
                     margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -329,7 +372,6 @@ void openChatScreen(Map<String, dynamic> message) {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                         
                           '${message['sender_name']}',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
