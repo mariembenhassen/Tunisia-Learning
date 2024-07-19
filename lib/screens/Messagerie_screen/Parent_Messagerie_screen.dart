@@ -221,7 +221,6 @@ class _ParentMessagingPageState extends State<ParentMessagingPage> {
                       TextField(
                         controller: responseController,
                         decoration: InputDecoration(
-                          
                           hintText: 'Type your response here...',
                           border: OutlineInputBorder(),
                         ),
@@ -241,6 +240,7 @@ class _ParentMessagingPageState extends State<ParentMessagingPage> {
                               idUser: idUser,
                               selectedTeacherId: int.parse(message['idsender']),
                               message: response,
+                              idSource: int.parse(message['idsource']),
                             );
                           },
                           icon: Icon(Icons.send),
@@ -262,12 +262,14 @@ class _ParentMessagingPageState extends State<ParentMessagingPage> {
     );
   }
 
-  Future<void> sendResponse(
-      {required int idUser,
-      required int selectedTeacherId,
-      required String message}) async {
+  Future<void> sendResponse({
+    required int idUser,
+    required int selectedTeacherId,
+    required String message,
+    required int idSource,
+  }) async {
     final url = Uri.parse(
-        'http://localhost//Tunisia_Learning_backend/TunisiaLearningPhp/send_to_teacher.php');
+        'http://localhost/Tunisia_Learning_backend/TunisiaLearningPhp/send_to_teacher.php');
 
     final response = await http.post(
       url,
@@ -278,6 +280,7 @@ class _ParentMessagingPageState extends State<ParentMessagingPage> {
         'idUser': idUser,
         'selectedTeacherId': selectedTeacherId,
         'message': message,
+        'idsource': idSource, // Include idsource
       }),
     );
 
