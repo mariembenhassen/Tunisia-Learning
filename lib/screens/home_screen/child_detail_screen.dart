@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_first_project/components/side_menu_parent.dart';
+import 'package:flutter_first_project/screens/Doc_Screen/Doc_Screen.dart';
 import 'package:flutter_first_project/screens/Messagerie_screen/Parent_Messagerie_screen.dart';
 import 'package:flutter_first_project/screens/assignment_screen/course_list_screen.dart';
 import 'package:flutter_first_project/screens/data/course_model.dart';
@@ -308,9 +309,21 @@ class ChildDetailScreen extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             HomeCard(
-                              onPress: () {},
-                              icon: 'assets/icons/holiday.svg',
-                              title: 'Demande D\'absences',
+                              onPress: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => DocScreen(
+                                      idEtablissement:
+                                          childData['idetablissement'],
+                                      idNiveau: childData['idniveau'],
+                                      idClasse: childData['idclasse'],
+                                    ),
+                                  ),
+                                );
+                              },
+                              icon: 'assets/icons/documents-symbol.svg',
+                              title: ' Documents',
                             ),
                             HomeCard(
                               onPress: () {

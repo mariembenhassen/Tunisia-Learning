@@ -276,7 +276,7 @@ class _MessageSendingPageState extends State<MessageSendingPage> {
   Future<bool> sendMessage(
       int idUser, int selectedTeacherId, String message) async {
     final url = Uri.parse(
-        'http://localhost//Tunisia_Learning_backend/TunisiaLearningPhp/send_to_teacher.php');
+        'http://localhost//Tunisia_Learning_backend/TunisiaLearningPhp/send_select_teacher.php');
     final headers = {"Content-Type": "application/json"};
     final body = jsonEncode({
       "idUser": idUser,

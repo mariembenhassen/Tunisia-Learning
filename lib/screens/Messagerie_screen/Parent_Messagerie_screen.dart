@@ -137,6 +137,8 @@ class _ParentMessagingPageState extends State<ParentMessagingPage> {
     }
   }
 
+/*
+//this is will gie the idsource same value as id
   void openBottomSheet(Map<String, dynamic> message, int idUser) {
     TextEditingController responseController = TextEditingController();
 
@@ -240,7 +242,6 @@ class _ParentMessagingPageState extends State<ParentMessagingPage> {
                               idUser: idUser,
                               selectedTeacherId: int.parse(message['idsender']),
                               message: response,
-                              idSource: int.parse(message['idsource']),
                             );
                           },
                           icon: Icon(Icons.send),
@@ -260,16 +261,152 @@ class _ParentMessagingPageState extends State<ParentMessagingPage> {
         );
       },
     );
+  }*/
+  //yhis is with snack bar
+  void openBottomSheet(Map<String, dynamic> message, int idUser) {
+    TextEditingController responseController = TextEditingController();
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (BuildContext bc) {
+        return DraggableScrollableSheet(
+          initialChildSize: 0.6,
+          minChildSize: 0.4,
+          maxChildSize: 0.9,
+          expand: false,
+          builder: (BuildContext context, ScrollController scrollController) {
+            return Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(30.0),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  "From: ${message['sender_name']}",
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16.0,
+                                  ),
+                                ),
+                                Text(
+                                  "Date: ${message['dateheure']}",
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 14.0,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.reply, color: Colors.blue),
+                            onPressed: () {
+                              // Handle reply action
+                            },
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 10.0),
+                      Text(
+                        "Message:",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18.0,
+                        ),
+                      ),
+                      SizedBox(height: 10.0),
+                      Expanded(
+                        child: SingleChildScrollView(
+                          controller: scrollController,
+                          child: Text(
+                            message['mail'],
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 18.0,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 10.0),
+                      TextField(
+                        controller: responseController,
+                        decoration: InputDecoration(
+                          hintText: 'Type your response here...',
+                          border: OutlineInputBorder(),
+                        ),
+                        style: TextStyle(
+                          color: Colors.black, // Sets the font color to black
+                        ),
+                        minLines: 3,
+                        maxLines: 5,
+                      ),
+                      SizedBox(height: 20.0),
+                      Align(
+                        alignment: Alignment.center,
+                        child: ElevatedButton.icon(
+                          onPressed: () async {
+                            String response = responseController.text;
+                            await sendResponse(
+                              idUser: idUser,
+                              selectedTeacherId: int.parse(message['idsender']),
+                              message: response,
+                            );
+
+                            // Close the bottom sheet first
+                            Navigator.pop(context);
+
+                            // Show Snackbar at the top
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Message sent successfully!'),
+                                backgroundColor: Colors.green,
+                                duration: Duration(seconds: 2),
+                                behavior: SnackBarBehavior.floating,
+                                margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                              ),
+                            );
+                          },
+                          icon: Icon(Icons.send), 
+                          label: Text('Répondre'),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blue,
+                            textStyle: TextStyle(fontSize: 16.0),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 
-  Future<void> sendResponse({
-    required int idUser,
-    required int selectedTeacherId,
-    required String message,
-    required int idSource,
-  }) async {
+  Future<void> sendResponse(
+      {required int idUser,
+      required int selectedTeacherId,
+      required String message}) async {
     final url = Uri.parse(
-        'http://localhost/Tunisia_Learning_backend/TunisiaLearningPhp/send_to_teacher.php');
+        'http://localhost//Tunisia_Learning_backend/TunisiaLearningPhp/send_to_teacher.php');
 
     final response = await http.post(
       url,
@@ -280,7 +417,6 @@ class _ParentMessagingPageState extends State<ParentMessagingPage> {
         'idUser': idUser,
         'selectedTeacherId': selectedTeacherId,
         'message': message,
-        'idsource': idSource, // Include idsource
       }),
     );
 

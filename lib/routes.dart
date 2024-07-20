@@ -1,3 +1,4 @@
+import 'package:flutter_first_project/screens/Doc_Screen/Doc_Screen.dart';
 import 'package:flutter_first_project/screens/Messagerie_screen/Parent_Messagerie_screen.dart';
 import 'package:flutter_first_project/screens/Messagerie_screen/Parent_mesaages/send.dart';
 import 'package:flutter_first_project/screens/Messagerie_screen/Teacher_Messagerie_screen.dart';
@@ -24,4 +25,5 @@ Map<String, WidgetBuilder> routes = {
   ParentMessagingPage.routeName: (context) => ParentMessagingPage(),
   TeacherMessagingPage.routeName: (context) => TeacherMessagingPage(),
   MessageSendingPage.routeName: (context) => MessageSendingPage(),
+
 };

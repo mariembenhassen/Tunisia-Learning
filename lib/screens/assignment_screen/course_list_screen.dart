@@ -47,13 +47,38 @@ class _CourseScreenState extends State<CourseScreen> {
 
     if (response.statusCode == 200) {
       String responseBody = utf8.decode(response.bodyBytes).trim();
+      Map<String, dynamic> jsonResponse = json.decode(responseBody);
+
+      // Check if the response contains a list of courses
+      if (jsonResponse.containsKey('courses')) {
+        List<dynamic> coursesJson = jsonResponse['courses'];
+        return coursesJson.map((course) => Course.fromJson(course)).toList();
+      } else {
+        // Handle the case where 'courses' key is not present
+        throw Exception('Failed to load courses: Key "courses" not found');
+      }
+    } else {
+      throw Exception('Failed to load courses: ${response.statusCode}');
+    }
+  }
+
+/*
+  Future<List<Course>> fetchCourses(
+      int idEtablissement, int idNiveau, int idClasse) async {
+    final baseUrl =
+        'http://localhost/Tunisia_Learning_backend/TunisiaLearningPhp/get_exercours.php?idetablissement=$idEtablissement&idniveau=$idNiveau&idclasse=$idClasse';
+
+    final response = await http.get(Uri.parse(baseUrl));
+
+    if (response.statusCode == 200) {
+      String responseBody = utf8.decode(response.bodyBytes).trim();
       List<dynamic> jsonResponse = json.decode(responseBody);
       return jsonResponse.map((course) => Course.fromJson(course)).toList();
     } else {
       throw Exception('Failed to load courses: ${response.statusCode}');
     }
   }
-
+*/
   // Function to launch URL
   void _launchURL(String url) async {
     if (await canLaunch(url)) {
