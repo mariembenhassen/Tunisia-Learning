@@ -357,8 +357,8 @@ class ChildDetailScreen extends StatelessWidget {
                                 // Navigator.pushNamed(
                                 // context, DateSheetScreen.routeName);
                               },
-                              icon: 'assets/icons/datesheet.svg',
-                              title: 'Emploi du temps',
+                              icon: 'assets/icons/holiday.svg',
+                              title: 'Évènement',
                             ),
                           ],
                         ),
