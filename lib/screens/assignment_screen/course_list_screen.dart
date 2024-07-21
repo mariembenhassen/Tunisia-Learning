@@ -1,20 +1,14 @@
 import 'package:http_parser/http_parser.dart';
 
-import 'package:file_picker/file_picker.dart';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_first_project/constante.dart';
 import 'package:flutter_first_project/screens/data/course_model.dart';
 import 'package:flutter_first_project/screens/login_screen/login_screen.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:file_picker/file_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:flutter/material.dart';
-import 'package:flutter_first_project/constante.dart';
-import 'package:flutter_first_project/screens/data/course_model.dart';
-import 'package:flutter_first_project/screens/login_screen/login_screen.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:file_picker/file_picker.dart';
 
 String getContentType(String? extension) {
   switch (extension) {
@@ -37,11 +31,13 @@ class CourseScreen extends StatefulWidget {
   final int idEtablissement;
   final int idNiveau;
   final int idClasse;
+  final int idEleve;
 
   CourseScreen({
     required this.idEtablissement,
     required this.idNiveau,
     required this.idClasse,
+    required this.idEleve,
   });
 
   @override
@@ -113,12 +109,13 @@ class _CourseScreenState extends State<CourseScreen> {
       SnackBar(
         content: Row(
           children: [
-            Icon(Icons.check_circle, color: Colors.white),
+            Icon(Icons.sentiment_very_satisfied, color: Colors.white),
             SizedBox(width: 8),
             Text('Bravo !', style: TextStyle(color: Colors.white)),
           ],
         ),
         backgroundColor: Colors.green,
+        duration: Duration(seconds: 4), // Increase duration
       ),
     );
   }
@@ -140,7 +137,7 @@ class _CourseScreenState extends State<CourseScreen> {
     }
   }
 
-  Future<void> _pickFile() async {
+  Future<void> _pickFile(int idcours) async {
     try {
       final result = await FilePicker.platform.pickFiles();
 
@@ -152,9 +149,11 @@ class _CourseScreenState extends State<CourseScreen> {
               'http://localhost/Tunisia_Learning_backend/TunisiaLearningPhp/upload_response.php');
 
           final request = http.MultipartRequest('POST', uri)
-            ..fields['idcours'] = '6' // Replace with actual data
-            ..fields['idetablissement'] = '1' // Replace with actual data
-            ..fields['ideleve'] = '2241' // Replace with actual data
+            ..fields['idcours'] = idcours.toString() // Replace with actual data
+            ..fields['idetablissement'] =
+                widget.idEtablissement.toString() // Replace with actual data
+            ..fields['ideleve'] =
+                widget.idEleve.toString() // Replace with actual data
             ..files.add(
               http.MultipartFile.fromBytes(
                 'file',
@@ -359,10 +358,19 @@ class _CourseScreenState extends State<CourseScreen> {
                               ),
                             ),
                             SizedBox(height: 8),
-                            ElevatedButton(
+                            ElevatedButton.icon(
+                              onPressed: () => _pickFile(course.idcours),
+                              icon: Icon(Icons.upload_file),
+                              label: Text('Choisir un fichier'),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color.fromARGB(
+                                    255, 115, 173, 219), // Background color
+                              ),
+                            ),
+                            /* ElevatedButton(
                               onPressed: _pickFile,
                               child: Text('Choisir un fichier'),
-                            ),
+                            ),*/
                           ],
                         ],
                       ),

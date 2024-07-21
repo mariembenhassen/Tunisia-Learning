@@ -296,6 +296,7 @@ class ChildDetailScreen extends StatelessWidget {
                                           childData['idetablissement'],
                                       idNiveau: childData['idniveau'],
                                       idClasse: childData['idclasse'],
+                                       idEleve: childId,
                                     ),
                                   ),
                                 );
