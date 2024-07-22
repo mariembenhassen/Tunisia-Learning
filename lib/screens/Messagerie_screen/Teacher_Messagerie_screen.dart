@@ -116,7 +116,7 @@ class _TeacherMessagingPageState extends State<TeacherMessagingPage> {
                       onTap: () {
                         Navigator.pushNamed(
                           context,
-                          '/chatPage',
+                          '/ChatTeacherPage',
                           arguments: {
                             'idSource': int.parse(message['idsource']),
                             'selectedTeacherId': idUser,
@@ -194,14 +194,14 @@ class _TeacherMessagingPageState extends State<TeacherMessagingPage> {
                 ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.pushNamed(
+          /* Navigator.pushNamed(
             context,
             '/sendMessagePage', // Replace with your route for the message sending page
             arguments: {
               'id': idUser,
               'idEtablissement': idEtablissement,
             },
-          );
+          );*/
         },
         child: Icon(Icons.add),
         backgroundColor: Colors.blue[700],

@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_first_project/screens/Messagerie_screen/Parent_mesaages/chatPage.dart';
@@ -7,7 +6,6 @@ import 'package:flutter_first_project/screens/home_screen/child_detail_screen.da
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-
 
 import 'package:google_nav_bar/google_nav_bar.dart';
 
@@ -30,6 +28,7 @@ class _ParentMessagingPageState extends State<ParentMessagingPage> {
   late int idEtablissement;
   String? selectedReceiverType;
   String? selectedTeacher;
+
   String? selectedChild;
   final List<String> childrenNames = [];
   TextEditingController messageController = TextEditingController();
@@ -235,7 +234,7 @@ class _ParentMessagingPageState extends State<ParentMessagingPage> {
                       ChatPage.routeName,
                       arguments: {
                         'idSource': int.parse(message['idsource']),
-                        'selectedTeacherId': selectedTeacher,
+                        'selectedTeacherId': int.parse(message['idsender']),
                         'idUser': idUser,
                       },
                     );
