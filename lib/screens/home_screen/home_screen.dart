@@ -37,31 +37,30 @@ class _HomeScreenState extends State<HomeScreen> {
   //
 
   @override
-  void initState() {
-    super.initState();
-    _teacherDetailsFuture = fetchTeacherDetails();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final args =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    id = args['id'] ?? '';
+    nom = args['nom'] ?? '';
+    prenom = args['prenom'] ?? '';
+
+    _teacherDetailsFuture = fetchTeacherDetails(id);
   }
 
-  Future<TeacherDetails?> fetchTeacherDetails() async {
+  Future<TeacherDetails?> fetchTeacherDetails(String id) async {
     try {
-      // Replace with your actual endpoint URL
       final response = await http.get(
         Uri.parse(
-            'http://localhost/Tunisia_Learning_backend/TunisiaLearningPhp/get_teacher_detail.php?id=id'),
+            'http://localhost/Tunisia_Learning_backend/TunisiaLearningPhp/get_teacher_detail.php?id=$id'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
       );
 
-      //
       if (response.statusCode == 200) {
         final teacherDetails =
             TeacherDetails.fromJson(jsonDecode(response.body));
-        setState(() {
-          id = teacherDetails.id;
-          nom = teacherDetails.nom;
-          prenom = teacherDetails.prenom;
-        });
         return teacherDetails;
       } else {
         throw Exception('Failed to load teacher details');
@@ -97,54 +96,58 @@ class _HomeScreenState extends State<HomeScreen> {
       //the appbar part
 
       appBar: AppBar(
-        //
         backgroundColor: kPrimaryColor,
-        // style:
         title: Text(
           'Tunisia Learning',
           style: Theme.of(context).textTheme.titleLarge!.copyWith(
                 fontWeight: FontWeight.bold,
                 fontSize: 15.5,
                 color: Colors.white,
-              ), //
+              ),
         ),
         actions: [
-//
           IconButton(
             icon: Icon(Icons.notifications, size: 30),
             onPressed: () {
               // Handle bell icon press
             },
           ),
-
-          //
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: PopupMenuButton<String>(
               onSelected: (String result) {
                 if (result == 'logout') {
-                  // Handle logout action
                   Navigator.pushNamedAndRemoveUntil(
                       context, LoginScreen.routeName, (route) => false);
                 }
               },
-              offset: Offset(0, 50), // Adjust the offset for vertical alignment
+              offset: Offset(0, 50),
               itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
                 PopupMenuItem<String>(
                   value: 'logout',
                   child: Row(
                     children: [
-                      Icon(Icons.logout, color: Colors.black54),
+                      Icon(Icons.logout, color: Colors.redAccent),
                       SizedBox(width: 10),
-                      Text('Déconnexion'),
+                      Text(
+                        'Déconnexion',
+                        style: TextStyle(
+                          color: Colors.black54,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
                     ],
                   ),
                 ),
               ],
+              color: Colors.white,
+              elevation: 8,
             ),
           ),
         ],
       ),
+
       drawer: SideMenu(id: id, nom: nom, prenom: prenom),
       body: Column(
         children: [

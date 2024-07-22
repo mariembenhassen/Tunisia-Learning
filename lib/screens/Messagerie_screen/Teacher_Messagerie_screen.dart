@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_first_project/screens/Messagerie_screen/Teacher_messages/ChatPage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:google_nav_bar/google_nav_bar.dart';
@@ -41,7 +42,7 @@ class _TeacherMessagingPageState extends State<TeacherMessagingPage> {
   Future<void> _fetchMessages() async {
     try {
       final response = await http.get(Uri.parse(
-          'http://localhost/Tunisia_Learning_backend/TunisiaLearningPhp/get_parents_messages.php?iduser=$idUser&idetablissement=$idEtablissement'));
+          'http://localhost/Tunisia_Learning_backend/TunisiaLearningPhp/get_parents_messages.php?iduser=$idUser'));
       print('Response status: ${response.statusCode}');
       print('Response body: ${response.body}');
 
@@ -116,10 +117,10 @@ class _TeacherMessagingPageState extends State<TeacherMessagingPage> {
                       onTap: () {
                         Navigator.pushNamed(
                           context,
-                          '/ChatTeacherPage',
+                          ChatTeacherPage.routeName,
                           arguments: {
                             'idSource': int.parse(message['idsource']),
-                            'selectedTeacherId': idUser,
+                            'selectedParentId':int.parse(message['idsender']) ,
                             'idUser': idUser,
                           },
                         );

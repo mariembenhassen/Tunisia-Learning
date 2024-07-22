@@ -120,8 +120,8 @@ class _ParentMessagingPageState extends State<ParentMessagingPage> {
 
   void fetchMessages(int idUser, int idEtablissement) async {
     String url =
-        //  'http://localhost/Tunisia_Learning_backend/TunisiaLearningPhp/get_teacher_messages.php?iduser=$idUser&idetablissement=$idEtablissement';
-        'http://localhost/Tunisia_Learning_backend/TunisiaLearningPhp/get_teacher_messages.php?iduser=2059&idetablissement=1';
+        'http://localhost/Tunisia_Learning_backend/TunisiaLearningPhp/get_teacher_messages.php?iduser=$idUser&idetablissement=$idEtablissement';
+    // 'http://localhost/Tunisia_Learning_backend/TunisiaLearningPhp/get_teacher_messages.php?iduser=2059&idetablissement=1';
     try {
       var response = await http.get(Uri.parse(url));
 
