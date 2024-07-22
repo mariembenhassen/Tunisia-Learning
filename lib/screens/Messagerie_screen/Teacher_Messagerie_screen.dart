@@ -1,710 +1,260 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:flutter/material.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
 
 class TeacherMessagingPage extends StatefulWidget {
-  static const routeName = '/teacher_messagerie';
+  static const String routeName = '/teacher-messaging';
 
   @override
   _TeacherMessagingPageState createState() => _TeacherMessagingPageState();
 }
 
 class _TeacherMessagingPageState extends State<TeacherMessagingPage> {
+  List<dynamic> _messages = [];
+  bool _isLoading = true;
+  String _errorMessage = '';
   late int idUser;
   late int idEtablissement;
-  bool isArgsLoaded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final arguments =
+          ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
+      if (arguments != null &&
+          arguments['iduser'] != null &&
+          arguments['idetablissement'] != null) {
+        idUser = arguments['iduser'];
+        idEtablissement = arguments['idetablissement'];
+        _fetchMessages();
+      } else {
+        setState(() {
+          _errorMessage = 'Invalid parameters';
+          _isLoading = false;
+        });
+      }
+    });
+  }
+
+  Future<void> _fetchMessages() async {
+    try {
+      final response = await http.get(Uri.parse(
+          'http://localhost/Tunisia_Learning_backend/TunisiaLearningPhp/get_parents_messages.php?iduser=$idUser&idetablissement=$idEtablissement'));
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        List<dynamic> messages = json.decode(response.body);
+        print('Decoded messages: $messages');
+
+        setState(() {
+          _messages = messages;
+          _isLoading = false;
+        });
+      } else {
+        setState(() {
+          _errorMessage =
+              'Failed to load messages. Status code: ${response.statusCode}';
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _errorMessage = 'An error occurred: $e';
+        _isLoading = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final Map<String, dynamic>? args =
-        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
-
-    if (args == null ||
-        args['iduser'] == null ||
-        args['idetablissement'] == null) {
-      return Scaffold(
-        appBar: AppBar(
-          title: Text('Error'),
-        ),
-        body: Center(
-          child: Text('Error: Missing parameters.'),
-        ),
-      );
-    }
-
-    final int idUser = args['iduser'];
-    final int idEtablissement = args['idetablissement'];
-
     return Scaffold(
-      backgroundColor: Colors.blue[50]?.withOpacity(0.5),
-      body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            Container(
-              width: MediaQuery.of(context).size.width,
-              height: 320.0, // Increased height to 320.0
-              decoration: BoxDecoration(
-                color: Colors.blue[600],
-                borderRadius: BorderRadius.only(
-                  bottomRight: Radius.circular(40.0),
-                  bottomLeft: Radius.circular(40.0),
-                ),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(100.0),
+        child: AppBar(
+          backgroundColor: Colors.blue[800],
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Messages",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 26.0,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            SizedBox(
-                              height: 10.0,
-                            ),
-                            Text(
-                              "You have got 3 new mails",
-                              style: TextStyle(
-                                  color: Colors.blue[50], fontSize: 14.0),
+                    Text(
+                      "Messages",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 26.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 10.0),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+      body: _isLoading
+          ? Center(child: CircularProgressIndicator())
+          : _errorMessage.isNotEmpty
+              ? Center(child: Text(_errorMessage))
+              : ListView.builder(
+                  itemCount: _messages.length,
+                  itemBuilder: (context, index) {
+                    final message = _messages[index];
+                    String messagePreview = message['mail'].length > 50
+                        ? '${message['mail'].substring(0, 50)}...'
+                        : message['mail'];
+                    bool isUnseen = message['lu'] == '1';
+
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamed(
+                          context,
+                          '/chatPage',
+                          arguments: {
+                            'idSource': int.parse(message['idsource']),
+                            'selectedTeacherId': idUser.toString(),
+                            'idUser': idUser,
+                          },
+                        );
+                      },
+                      child: Container(
+                        margin:
+                            EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                        padding: EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: isUnseen ? Colors.blue[50] : Colors.white,
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.3),
+                              spreadRadius: 2,
+                              blurRadius: 8,
+                              offset: Offset(0, 4),
                             ),
                           ],
                         ),
-                        //
-                      
-                      ],
-                    ),
-                    SizedBox(
-                      height: 8.0,
-                    ),
-                    Expanded(
-                      child: Stack(
-                        clipBehavior: Clip.none,
-                        alignment: Alignment.center,
-                        children: <Widget>[
-                          Positioned(
-                            bottom: 0.0,
-                            child: Container(
-                              height: 80.0, // Increased height to 80.0
-                              width: 300.0,
-                              decoration: BoxDecoration(
-                                color: Colors.blue,
-                                borderRadius: BorderRadius.circular(15.0),
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            bottom: 10.0,
-                            child: Container(
-                              height: 80.0, // Increased height to 80.0
-                              width: 330.0,
-                              decoration: BoxDecoration(
-                                color: Colors.white70,
-                                borderRadius: BorderRadius.circular(15.0),
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            bottom: 20.0,
-                            child: Container(
-                              height: 105.0, // Increased height to 105.0
-                              width: 350.0,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(15.0),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Row(
-                                  children: <Widget>[
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.blueGrey,
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
-                                      ),
-                                      // child: Padding(
-                                      // padding: const EdgeInsets.all(3.0),
-                                      // child: Image.asset(
-                                      // "assets/boy.png",
-                                      // height: 60.0,
-                                      // width: 60.0,
-                                      // ),
-                                      // ),
-                                      child: Icon(Icons.person,
-                                          color: Colors.white),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    '${message['sender_name']}',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black87,
                                     ),
-                                    SizedBox(width: 8.0),
-                                    Expanded(
-                                      flex: 2,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(10.0),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            Row(
-                                              children: <Widget>[
-                                                Text(
-                                                  "Protorix Code",
-                                                  style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 16.0),
-                                                ),
-                                                Spacer(),
-                                                Text(
-                                                  "8:16 AM",
-                                                  style: TextStyle(
-                                                      color: Colors.grey,
-                                                      fontSize: 12.0),
-                                                ),
-                                              ],
-                                            ),
-                                            Text(
-                                              "Your opinion matters",
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 14.0),
-                                            ),
-                                            SizedBox(
-                                              height: 3.0,
-                                            ),
-                                            Row(
-                                              children: <Widget>[
-                                                Text(
-                                                  "You have a mail. Check it!",
-                                                  style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 12.0),
-                                                ),
-                                                Spacer(),
-                                                Icon(
-                                                  Icons.star_border,
-                                                  color: Colors.orange,
-                                                  size: 20.0,
-                                                )
-                                              ],
-                                            )
-                                          ],
+                                  ),
+                                  SizedBox(height: 4),
+                                  Text(
+                                    messagePreview,
+                                    style: TextStyle(
+                                      color: Colors.black87,
+                                    ),
+                                  ),
+                                  SizedBox(height: 8),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        '${message['dateheure']}',
+                                        style: TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: 12,
                                         ),
                                       ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            SizedBox(height: 30.0),
-            Padding(
-              padding: const EdgeInsets.only(left: 30.0),
-              child: Row(
-                children: <Widget>[
-                  Text(
-                    "RECENTS",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16.0),
-                  ),
-                  SizedBox(
-                    width: 10.0,
-                  ),
-                  Text(
-                    "(634 mails)",
-                    style: TextStyle(
-                      color: Colors.grey,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: 20.0,
-            ),
-            InkWell(
-              onTap: () {
-                openBottomSheet();
-              },
-              child: Container(
-                height: 100.0,
-                width: 350.0,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(15.0),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    children: <Widget>[
-                      Container(
-                        decoration: BoxDecoration(
-                            color: Colors.blueGrey,
-                            borderRadius: BorderRadius.circular(10.0)),
-                        child: Padding(
-                          padding: const EdgeInsets.all(3.0),
-                          /* child: Image.asset(
-                            "assets/boy.png",
-                            height: 60.0,
-                            width: 60.0,
-                          ),*/
-                        ),
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Row(
-                                children: <Widget>[
-                                  Text(
-                                    "Protorix Code",
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16.0),
-                                  ),
-                                  Spacer(),
-                                  Text(
-                                    "8:16 AM",
-                                    style: TextStyle(
-                                        color: Colors.grey, fontSize: 12.0),
+                                      isUnseen
+                                          ? Icon(
+                                              Icons.mark_email_unread,
+                                              color: Colors.red,
+                                            )
+                                          : Icon(
+                                              Icons.done,
+                                              color: Colors.blueGrey,
+                                            ),
+                                    ],
                                   ),
                                 ],
                               ),
-                              Text(
-                                "Your opinion matters",
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 14.0),
-                              ),
-                              SizedBox(
-                                height: 3.0,
-                              ),
-                              Row(
-                                children: <Widget>[
-                                  Text(
-                                    "You have a mail. Check it!",
-                                    style: TextStyle(
-                                        color: Colors.black, fontSize: 12.0),
-                                  ),
-                                  Spacer(),
-                                  Icon(
-                                    Icons.star_border,
-                                    color: Colors.orange,
-                                    size: 20.0,
-                                  )
-                                ],
-                              )
-                            ],
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 10.0,
-            ),
-            Container(
-              height: 140.0,
-              width: 350.0,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(15.0),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  children: <Widget>[
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Container(
-                          decoration: BoxDecoration(
-                              color: Colors.blueGrey,
-                              borderRadius: BorderRadius.circular(10.0)),
-                          child: Padding(
-                            padding: const EdgeInsets.all(3.0),
-                            /* child: Image.asset(
-                              "assets/boy.png",
-                              height: 60.0,
-                              width: 60.0,
-                            ),*/
-                          ),
-                        ),
-                        SizedBox(width: 10.0),
-                        Expanded(
-                          flex: 2,
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 10.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Row(
-                                  children: <Widget>[
-                                    Text(
-                                      "Nwoye Akachi",
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16.0),
-                                    ),
-                                    Spacer(),
-                                    Text(
-                                      "8:16 AM",
-                                      style: TextStyle(
-                                          color: Colors.grey, fontSize: 12.0),
-                                    ),
-                                  ],
-                                ),
-                                Text(
-                                  "Wireframe for hotel booking app",
-                                  style: TextStyle(
-                                      color: Colors.black, fontSize: 14.0),
-                                ),
-                                SizedBox(
-                                  height: 5.0,
-                                ),
-                                Row(
-                                  children: <Widget>[
-                                    Text(
-                                      "Please check the attachment",
-                                      style: TextStyle(
-                                          color: Colors.black, fontSize: 12.0),
-                                    ),
-                                    Spacer(),
-                                    Icon(
-                                      Icons.star_border,
-                                      color: Colors.orange,
-                                      size: 20.0,
-                                    )
-                                  ],
-                                )
-                              ],
                             ),
-                          ),
-                        )
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 10.0,
-            ),
-            Container(
-              height: 140.0,
-              width: 350.0,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(15.0),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Row(
-                      children: <Widget>[
-                        Container(
-                          decoration: BoxDecoration(
-                              color: Colors.blueGrey,
-                              borderRadius: BorderRadius.circular(10.0)),
-                          child: Padding(
-                            padding: const EdgeInsets.all(3.0),
-                            /* child: Image.asset(
-                              "assets/boy.png",
-                              height: 60.0,
-                              width: 60.0,
-                            ),*/
-                          ),
-                        ),
-                        Expanded(
-                          flex: 2,
-                          child: Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Row(
-                                  children: <Widget>[
-                                    Text(
-                                      "Booking.com",
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16.0),
-                                    ),
-                                    Spacer(),
-                                    Text(
-                                      "8:16 AM",
-                                      style: TextStyle(
-                                          color: Colors.grey, fontSize: 12.0),
-                                    ),
-                                  ],
-                                ),
-                                Text(
-                                  "Ticket confirmation",
-                                  style: TextStyle(
-                                      color: Colors.black, fontSize: 14.0),
-                                ),
-                                SizedBox(
-                                  height: 3.0,
-                                ),
-                                Row(
-                                  children: <Widget>[
-                                    Text(
-                                      "Please check the ticket",
-                                      style: TextStyle(
-                                          color: Colors.black, fontSize: 12.0),
-                                    ),
-                                    Spacer(),
-                                    Icon(
-                                      Icons.star_border,
-                                      color: Colors.orange,
-                                      size: 20.0,
-                                    )
-                                  ],
-                                )
-                              ],
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 10.0,
-            ),
-            SizedBox(
-              height: 100.0,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void openBottomSheet() {
-    showModalBottomSheet(
-        context: context,
-        backgroundColor: Colors.transparent,
-        builder: (BuildContext bc) {
-          return Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Container(
-              height: 500.0,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(30.0),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Row(
-                      children: <Widget>[
-                        Container(
-                          decoration: BoxDecoration(
-                              color: Colors.blueGrey,
-                              borderRadius: BorderRadius.circular(20.0)),
-                          child: Padding(
-                            padding: const EdgeInsets.all(3.0),
-                            /* child: Image.asset(
-                              "assets/boy.png",
-                              height: 60.0,
-                              width: 60.0,
-                            ),*/
-                          ),
-                        ),
-                        Expanded(
-                          flex: 2,
-                          child: Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Row(
-                                  children: <Widget>[
-                                    Text(
-                                      "Protorix Code",
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16.0),
-                                    ),
-                                    Spacer(),
-                                    Icon(
-                                      Icons.delete_outline,
-                                      color: Colors.blue[700],
-                                    ),
-                                    Icon(
-                                      Icons.more_vert,
-                                      color: Colors.blue[700],
-                                    ),
-                                  ],
-                                ),
-                                Text(
-                                  "Your opinion matters",
-                                  style: TextStyle(
-                                      color: Colors.black, fontSize: 14.0),
-                                )
-                              ],
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                    SizedBox(
-                      height: 20.0,
-                    ),
-                    Text(
-                      "Code,",
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18.0),
-                    ),
-                    SizedBox(
-                      height: 10.0,
-                    ),
-                    Text(
-                      "To add custom fonts to your application, and a ",
-                      style: TextStyle(color: Colors.black, fontSize: 18.0),
-                    ),
-                    SizedBox(
-                      height: 30.0,
-                    ),
-                    Text(
-                      "Thank you,",
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18.0),
-                    ),
-                    SizedBox(
-                      height: 5.0,
-                    ),
-                    Text(
-                      "Protorix Code",
-                      style: TextStyle(color: Colors.black, fontSize: 18.0),
-                    ),
-                    SizedBox(
-                      height: 15.0,
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                          color: Colors.blue[50],
-                          borderRadius: BorderRadius.circular(30.0)),
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Row(
-                          children: <Widget>[
-                            Text(
-                              "Reply..",
-                              style: TextStyle(
-                                  color: Colors.blueGrey, fontSize: 18.0),
-                            ),
-                            Spacer(),
-                            CircleAvatar(
-                              backgroundColor: Colors.blue[600],
-                              child: Icon(
-                                Icons.arrow_forward,
-                                color: Colors.white,
-                              ),
-                            )
                           ],
                         ),
                       ),
-                    )
-                  ],
+                    );
+                  },
                 ),
-              ),
-            ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.pushNamed(
+            context,
+            '/sendMessagePage', // Replace with your route for the message sending page
+            arguments: {
+              'id': idUser,
+              'idEtablissement': idEtablissement,
+            },
           );
-        });
-  }
-}
-
-
-/*
-class TeacherMessagingPage extends StatelessWidget {
-  static const routeName = '/teacher_messagerie';
-
-  @override
-  Widget build(BuildContext context) {
-    final Map<String, dynamic>? args =
-        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
-
-    if (args == null ||
-        args['iduser'] == null ||
-        args['idetablissement'] == null) {
-      return Scaffold(
-        appBar: AppBar(
-          title: Text('Error'),
-        ),
-        body: Center(
-          child: Text('Error: Missing parameters.'),
-        ),
-      );
-    }
-
-    final int idUser = args['iduser'];
-    final int idEtablissement = args['idetablissement'];
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Messagerie'),
+        },
+        child: Icon(Icons.add),
+        backgroundColor: Colors.blue[700],
+        elevation: 8.0,
+        tooltip: 'Send a new message',
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            //form  admin ou enseignent 
-            //from eleve choix 
-            //form message
-            //button envoyer 
-
-
-
-
-
-
-
-
-            Text('ID User: $idUser'),
-            Text('ID Etablissement: $idEtablissement'),
-            
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.2),
+              spreadRadius: 1,
+              blurRadius: 5,
+              offset: Offset(0, -1),
+            ),
           ],
+        ),
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
+            child: GNav(
+              rippleColor: Colors.grey[300]!,
+              hoverColor: Colors.grey[100]!,
+              gap: 8,
+              activeColor: Colors.white,
+              iconSize: 24,
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              duration: Duration(milliseconds: 400),
+              tabBackgroundColor: Colors.blue[700]!,
+              color: Colors.black,
+              tabs: [
+                GButton(
+                  icon: Icons.message,
+                  text: 'Messages',
+                ),
+                GButton(
+                  icon: Icons.list_alt,
+                  text: 'Sélectionner',
+                ),
+                GButton(
+                  icon: Icons.library_add,
+                  text: 'Envoyer',
+                ),
+              ],
+              selectedIndex: 0,
+              onTabChange: (index) {
+                // Handle tab change actions here
+              },
+            ),
+          ),
         ),
       ),
     );
   }
 }
-*/
