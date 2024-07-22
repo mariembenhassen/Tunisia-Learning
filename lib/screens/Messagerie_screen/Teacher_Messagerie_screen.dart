@@ -119,7 +119,7 @@ class _TeacherMessagingPageState extends State<TeacherMessagingPage> {
                           '/chatPage',
                           arguments: {
                             'idSource': int.parse(message['idsource']),
-                            'selectedTeacherId': idUser.toString(),
+                            'selectedTeacherId': idUser,
                             'idUser': idUser,
                           },
                         );

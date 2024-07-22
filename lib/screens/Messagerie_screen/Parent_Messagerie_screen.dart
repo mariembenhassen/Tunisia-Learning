@@ -1,21 +1,14 @@
+
 import 'dart:convert';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_first_project/screens/Messagerie_screen/Parent_mesaages/chatPage.dart';
-import 'package:flutter_first_project/screens/home_screen/child_detail_screen.dart';
-import 'package:http/http.dart' as http;
-import 'package:flutter/material.dart';
-import 'package:google_nav_bar/google_nav_bar.dart';
-import 'dart:convert';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_first_project/screens/Messagerie_screen/Parent_mesaages/chatPage.dart';
+
 import 'package:flutter_first_project/screens/home_screen/child_detail_screen.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
-import 'dart:convert';
-import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+
 import 'package:google_nav_bar/google_nav_bar.dart';
 
 class ParentMessagingPage extends StatefulWidget {
