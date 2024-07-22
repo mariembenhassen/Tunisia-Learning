@@ -5,6 +5,18 @@ import 'package:flutter_first_project/screens/home_screen/child_detail_screen.da
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'dart:convert';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_first_project/screens/Messagerie_screen/Parent_mesaages/chatPage.dart';
+import 'package:flutter_first_project/screens/home_screen/child_detail_screen.dart';
+import 'package:http/http.dart' as http;
+import 'package:flutter/material.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
+
+import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:google_nav_bar/google_nav_bar.dart';
 
 class ParentMessagingPage extends StatefulWidget {
   static const routeName = '/parent_messagerie';
@@ -31,8 +43,6 @@ class _ParentMessagingPageState extends State<ParentMessagingPage> {
   TextEditingController searchController = TextEditingController();
 
   List<String> receiverTypes = ['Administrator', 'Enseignant'];
-  // List<Map<String, dynamic>> teacherNames = [];
-  // List<Map<String, dynamic>> filteredTeacherNames = [];
   List<Teacher> teacherNames = [];
   List<Teacher> filteredTeacherNames = [];
 
@@ -66,7 +76,6 @@ class _ParentMessagingPageState extends State<ParentMessagingPage> {
       if (response.statusCode == 200) {
         var jsonData = json.decode(response.body);
 
-        // Check if jsonData is List<dynamic>
         if (jsonData is List<dynamic>) {
           List<Teacher> teachers = jsonData.map((teacher) {
             return Teacher(
@@ -119,8 +128,8 @@ class _ParentMessagingPageState extends State<ParentMessagingPage> {
 
   void fetchMessages(int idUser, int idEtablissement) async {
     String url =
+        //  'http://localhost/Tunisia_Learning_backend/TunisiaLearningPhp/get_teacher_messages.php?iduser=$idUser&idetablissement=$idEtablissement';
         'http://localhost/Tunisia_Learning_backend/TunisiaLearningPhp/get_teacher_messages.php?iduser=2059&idetablissement=1';
-
     try {
       var response = await http.get(Uri.parse(url));
 
@@ -137,172 +146,29 @@ class _ParentMessagingPageState extends State<ParentMessagingPage> {
     }
   }
 
-  //yhis is with snack bar
-  void openBottomSheet(Map<String, dynamic> message, int idUser) {
-    TextEditingController responseController = TextEditingController();
+  void updateMessageState(int messageId, int lu) async {
+    String url =
+        'http://localhost/Tunisia_Learning_backend/TunisiaLearningPhp/update_lu_state.php';
 
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      isScrollControlled: true,
-      builder: (BuildContext bc) {
-        return DraggableScrollableSheet(
-          initialChildSize: 0.6,
-          minChildSize: 0.4,
-          maxChildSize: 0.9,
-          expand: false,
-          builder: (BuildContext context, ScrollController scrollController) {
-            return Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(30.0),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Row(
-                        children: <Widget>[
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text(
-                                  "From: ${message['sender_name']}",
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16.0,
-                                  ),
-                                ),
-                                Text(
-                                  "Date: ${message['dateheure']}",
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 14.0,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          IconButton(
-                            icon: Icon(Icons.reply, color: Colors.blue),
-                            onPressed: () {
-                              // Handle reply action
-                            },
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 10.0),
-                      Text(
-                        "Message:",
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18.0,
-                        ),
-                      ),
-                      SizedBox(height: 10.0),
-                      Expanded(
-                        child: SingleChildScrollView(
-                          controller: scrollController,
-                          child: Text(
-                            message['mail'],
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 18.0,
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 10.0),
-                      TextField(
-                        controller: responseController,
-                        decoration: InputDecoration(
-                          hintText: 'Type your response here...',
-                          border: OutlineInputBorder(),
-                        ),
-                        style: TextStyle(
-                          color: Colors.black, // Sets the font color to black
-                        ),
-                        minLines: 3,
-                        maxLines: 5,
-                      ),
-                      SizedBox(height: 20.0),
-                      Align(
-                        alignment: Alignment.center,
-                        child: ElevatedButton.icon(
-                          onPressed: () async {
-                            String response = responseController.text;
-                            await sendResponse(
-                              idUser: idUser,
-                              selectedTeacherId: int.parse(message['idsender']),
-                              message: response,
-                              idSource: int.parse(
-                                  message['idsource']), // Pass idsource
-                            );
+    try {
+      var response = await http.post(
+        Uri.parse(url),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({'messageId': messageId, 'lu': lu}),
+      );
 
-                            // Close the bottom sheet first
-                            Navigator.pop(context);
-
-                            // Show Snackbar at the top
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('Message sent successfully!'),
-                                backgroundColor: Colors.green,
-                                duration: Duration(seconds: 2),
-                                behavior: SnackBarBehavior.floating,
-                                margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                              ),
-                            );
-                          },
-                          icon: Icon(Icons.send),
-                          label: Text('Répondre'),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blue,
-                            textStyle: TextStyle(fontSize: 16.0),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
-
-  Future<void> sendResponse(
-      {required int idUser,
-      required int selectedTeacherId,
-      required int idSource, // Added idSource parameter
-      required String message}) async {
-    final url = Uri.parse(
-        'http://localhost//Tunisia_Learning_backend/TunisiaLearningPhp/send_to_teacher.php');
-
-    final response = await http.post(
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode({
-        'idUser': idUser,
-        'selectedTeacherId': selectedTeacherId,
-        'message': message,
-        'idsource': idSource,
-      }),
-    );
-
-    if (response.statusCode == 200) {
-      print('Message sent successfully.');
-    } else {
-      print('Error: ${response.statusCode}');
+      if (response.statusCode == 200) {
+        var jsonData = json.decode(response.body);
+        if (jsonData['status'] == 'success') {
+          print('Message state updated successfully');
+        } else {
+          print('Failed to update message state: ${jsonData['message']}');
+        }
+      } else {
+        print('Failed to update message state');
+      }
+    } catch (e) {
+      print('Error: $e');
     }
   }
 
@@ -368,166 +234,114 @@ class _ParentMessagingPageState extends State<ParentMessagingPage> {
 
                 return GestureDetector(
                   onTap: () {
-                    // Handle tap action here, navigate to chat page or show details
-                    openBottomSheet(message,
-                        idUser as int); // Example of opening bottom sheet
+                    if (isUnseen) {
+                      updateMessageState(int.parse(message['id']), 0);
+                    }
+                    Navigator.pushNamed(
+                      context,
+                      ChatPage.routeName,
+                      arguments: {
+                        'idSource': int.parse(message['idsource']),
+                        'selectedTeacherId': selectedTeacher,
+                        'idUser': idUser,
+                      },
+                    );
                   },
-
-                  
-                  /*child: Container(
-                    margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                    padding: EdgeInsets.all(10),
+                  child: Container(
+                    margin: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                    padding: EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: isUnseen ? Colors.grey[200] : Colors.white,
-                      borderRadius: BorderRadius.circular(10),
+                      color: isUnseen ? Colors.grey[100] : Colors.white,
+                      borderRadius: BorderRadius.circular(12),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          spreadRadius: 1,
-                          blurRadius: 5,
+                          color: Colors.grey.withOpacity(0.3),
+                          spreadRadius: 2,
+                          blurRadius: 8,
+                          offset: Offset(0, 4),
                         ),
                       ],
                     ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    child: Row(
                       children: [
-                        Text(
-                          '${message['sender_name']}',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black87,
-                          ),
-                        ),
-                        SizedBox(height: 5),
-                        Text(
-                          messagePreview,
-                          style: TextStyle(
-                            color: Colors.black87,
-                          ),
-                        ),
-                        SizedBox(height: 10),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              '${message['dateheure']}',
-                              style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 12,
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                '${message['sender_name']}',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black87,
+                                ),
                               ),
-                            ),
-                            isUnseen
-                                ? Icon(
-                                    Icons.mark_email_unread,
-                                    color: Color.fromARGB(255, 236, 186, 182),
-                                  )
-                                : Icon(
-                                    Icons.done,
-                                    color: Colors.grey,
+                              SizedBox(height: 4),
+                              Text(
+                                messagePreview,
+                                style: TextStyle(
+                                  color: Colors.black87,
+                                ),
+                              ),
+                              SizedBox(height: 8),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    '${message['dateheure']}',
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 12,
+                                    ),
                                   ),
-                          ],
+                                  Row(
+                                    children: [
+                                      Tooltip(
+                                        message: 'Open chat',
+                                        child: IconButton(
+                                          icon: Icon(
+                                            Icons.arrow_forward_ios,
+                                            color: Colors.blue,
+                                            size: 22,
+                                          ),
+                                          onPressed: () {
+                                            if (isUnseen) {
+                                              updateMessageState(
+                                                  int.parse(message['id']), 0);
+                                            }
+                                            Navigator.pushNamed(
+                                              context,
+                                              ChatPage.routeName,
+                                              arguments: {
+                                                'idSource': int.parse(
+                                                    message['idsource']),
+                                                'selectedTeacherId':
+                                                    selectedTeacher,
+                                                'idUser': idUser,
+                                              },
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  isUnseen
+                                      ? Icon(
+                                          Icons.mark_email_unread,
+                                          color: Colors.red,
+                                        )
+                                      : Icon(
+                                          Icons.done,
+                                          color: Colors.grey,
+                                        ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
-                  ),*/
-
-                                  child: Container(
-                  margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: isUnseen ? Colors.grey[200] : Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 1,
-                        blurRadius: 5,
-                      ),
-                    ],
                   ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              '${message['sender_name']}',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black87,
-                              ),
-                            ),
-                            SizedBox(height: 5),
-                            Text(
-                              messagePreview,
-                              style: TextStyle(
-                                color: Colors.black87,
-                              ),
-                            ),
-                            SizedBox(height: 10),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  '${message['dateheure']}',
-                                  style: TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 12,
-                                  ),
-                                ),
-                                Row(
-                                  children: [
-                                    IconButton(
-                                      icon: Icon(Icons.reply, color: Colors.blue),
-                                      onPressed: () {
-                                        openBottomSheet(message, idUser);
-                                      },
-                                    ),
-                                    IconButton(
-                                      icon: Icon(Icons.history, color: Colors.blue),
-                                      onPressed: () {
-                                        Navigator.pushNamed(
-                                          context,
-                                          ChatPage.routeName,
-                                          arguments: {
-                                            'idSource': int.parse(message['idsource']),
-                                          },
-                                        );
-                                      },
-                                    ),
-                                  ],
-                                ),
-                                isUnseen
-                                    ? Icon(
-                                        Icons.mark_email_unread,
-                                        color: Color.fromARGB(255, 236, 186, 182),
-                                      )
-                                    : Icon(
-                                        Icons.done,
-                                        color: Colors.grey,
-                                      ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-            
-            
-          
-
-
-
-
-
-
-
-
-
-
                 );
               },
             ),
@@ -547,15 +361,19 @@ class _ParentMessagingPageState extends State<ParentMessagingPage> {
         },
         child: Icon(Icons.add),
         backgroundColor: Colors.blue[600],
+        elevation: 8.0,
+        tooltip: 'Send a new message',
       ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           color: Colors.white,
           boxShadow: [
             BoxShadow(
-              blurRadius: 20,
-              color: Colors.black.withOpacity(.1),
-            )
+              color: Colors.grey.withOpacity(0.2),
+              spreadRadius: 1,
+              blurRadius: 5,
+              offset: Offset(0, -1),
+            ),
           ],
         ),
         child: SafeArea(
@@ -565,7 +383,7 @@ class _ParentMessagingPageState extends State<ParentMessagingPage> {
               rippleColor: Colors.grey[300]!,
               hoverColor: Colors.grey[100]!,
               gap: 8,
-              activeColor: Colors.black,
+              activeColor: Colors.white,
               iconSize: 24,
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
               duration: Duration(milliseconds: 400),
@@ -587,8 +405,11 @@ class _ParentMessagingPageState extends State<ParentMessagingPage> {
               ],
               selectedIndex: 0,
               onTabChange: (index) {
-                if (index == 1) {}
-                if (index == 2) {}
+                if (index == 1) {
+                  // Implement the action for the second tab
+                } else if (index == 2) {
+                  // Implement the action for the third tab
+                }
               },
             ),
           ),
