@@ -372,7 +372,9 @@ class _ParentMessagingPageState extends State<ParentMessagingPage> {
                     openBottomSheet(message,
                         idUser as int); // Example of opening bottom sheet
                   },
-                  child: Container(
+
+                  
+                  /*child: Container(
                     margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                     padding: EdgeInsets.all(10),
                     decoration: BoxDecoration(
@@ -427,7 +429,105 @@ class _ParentMessagingPageState extends State<ParentMessagingPage> {
                         ),
                       ],
                     ),
+                  ),*/
+
+                                  child: Container(
+                  margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: isUnseen ? Colors.grey[200] : Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 1,
+                        blurRadius: 5,
+                      ),
+                    ],
                   ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '${message['sender_name']}',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black87,
+                              ),
+                            ),
+                            SizedBox(height: 5),
+                            Text(
+                              messagePreview,
+                              style: TextStyle(
+                                color: Colors.black87,
+                              ),
+                            ),
+                            SizedBox(height: 10),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  '${message['dateheure']}',
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                                Row(
+                                  children: [
+                                    IconButton(
+                                      icon: Icon(Icons.reply, color: Colors.blue),
+                                      onPressed: () {
+                                        openBottomSheet(message, idUser);
+                                      },
+                                    ),
+                                    IconButton(
+                                      icon: Icon(Icons.history, color: Colors.blue),
+                                      onPressed: () {
+                                        Navigator.pushNamed(
+                                          context,
+                                          ChatPage.routeName,
+                                          arguments: {
+                                            'idSource': int.parse(message['idsource']),
+                                          },
+                                        );
+                                      },
+                                    ),
+                                  ],
+                                ),
+                                isUnseen
+                                    ? Icon(
+                                        Icons.mark_email_unread,
+                                        color: Color.fromARGB(255, 236, 186, 182),
+                                      )
+                                    : Icon(
+                                        Icons.done,
+                                        color: Colors.grey,
+                                      ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+            
+            
+          
+
+
+
+
+
+
+
+
+
+
                 );
               },
             ),
