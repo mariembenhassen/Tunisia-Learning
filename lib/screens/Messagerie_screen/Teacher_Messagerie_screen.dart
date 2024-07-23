@@ -17,6 +17,8 @@ class _TeacherMessagingPageState extends State<TeacherMessagingPage> {
   String _errorMessage = '';
   late int idUser;
   late int idEtablissement;
+  List<dynamic> _parents = [];
+  List<dynamic> _students = [];
 
   @override
   void initState() {
@@ -29,6 +31,8 @@ class _TeacherMessagingPageState extends State<TeacherMessagingPage> {
           arguments['idetablissement'] != null) {
         idUser = arguments['iduser'];
         idEtablissement = arguments['idetablissement'];
+        _fetchParents();
+        _fetchStudents();
         _fetchMessages();
       } else {
         setState(() {
@@ -37,6 +41,63 @@ class _TeacherMessagingPageState extends State<TeacherMessagingPage> {
         });
       }
     });
+  }
+
+  Future<void> _fetchParents() async {
+    try {
+      final response = await http.get(Uri.parse(
+          'http://localhost/Tunisia_Learning_backend/TunisiaLearningPhp/get_all_parents.php?idetablissement=$idEtablissement'));
+      print('Parents response status: ${response.statusCode}');
+      print('Parents response body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        List<dynamic> parents = json.decode(response.body);
+        print('Decoded parents: $parents');
+
+        setState(() {
+          _parents = parents;
+        });
+      } else {
+        setState(() {
+          _errorMessage =
+              'Failed to load parents. Status code: ${response.statusCode}';
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _errorMessage = 'An error occurred: $e';
+      });
+    }
+  }
+
+  Future<void> _fetchStudents() async {
+    try {
+      final response = await http.get(Uri.parse(
+          'http://localhost/Tunisia_Learning_backend/TunisiaLearningPhp/get_all_students.php?idetablissement=$idEtablissement'));
+      print('Students response status: ${response.statusCode}');
+      print('Students response body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        List<dynamic> students = json.decode(response.body);
+        print('Decoded students: $students');
+
+        setState(() {
+          _students = students;
+          _isLoading = false;
+        });
+      } else {
+        setState(() {
+          _errorMessage =
+              'Failed to load students. Status code: ${response.statusCode}';
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _errorMessage = 'An error occurred: $e';
+        _isLoading = false;
+      });
+    }
   }
 
   Future<void> _fetchMessages() async {
@@ -120,7 +181,7 @@ class _TeacherMessagingPageState extends State<TeacherMessagingPage> {
                           ChatTeacherPage.routeName,
                           arguments: {
                             'idSource': int.parse(message['idsource']),
-                            'selectedParentId':int.parse(message['idsender']) ,
+                            'selectedParentId': int.parse(message['idsender']),
                             'idUser': idUser,
                           },
                         );
@@ -195,14 +256,16 @@ class _TeacherMessagingPageState extends State<TeacherMessagingPage> {
                 ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          /* Navigator.pushNamed(
+          Navigator.pushNamed(
             context,
-            '/sendMessagePage', // Replace with your route for the message sending page
+            '/send-to-parent', // Replace with your route for the message sending page
             arguments: {
-              'id': idUser,
+              'students': _students,
+              'parents': _parents,
+              'idUser': idUser,
               'idEtablissement': idEtablissement,
             },
-          );*/
+          );
         },
         child: Icon(Icons.add),
         backgroundColor: Colors.blue[700],
