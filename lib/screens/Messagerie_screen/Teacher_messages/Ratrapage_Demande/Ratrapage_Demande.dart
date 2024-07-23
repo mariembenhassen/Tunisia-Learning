@@ -75,7 +75,7 @@ class _RatrapageScreenState extends State<RatrapageScreen> {
       if (data['status'] == 'success') {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Rattrapage request submitted successfully.'),
+            content: Text('Demande de ratrapage envoyée avec succès !'),
             backgroundColor: Colors.green,
           ),
         );
@@ -91,7 +91,8 @@ class _RatrapageScreenState extends State<RatrapageScreen> {
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to submit request: ${data['message']}'),
+            content:
+                Text('Échec de l\'envoi de la demande : ${data['message']}'),
             backgroundColor: Colors.red,
           ),
         );
@@ -99,7 +100,7 @@ class _RatrapageScreenState extends State<RatrapageScreen> {
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Failed to connect to server.'),
+          content: Text('Une erreur s\'est produite'),
           backgroundColor: Colors.red,
         ),
       );
