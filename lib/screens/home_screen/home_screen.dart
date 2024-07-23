@@ -6,6 +6,7 @@ import 'package:flutter_first_project/components/side_menu.dart';
 import 'package:flutter_first_project/constante.dart';
 import 'package:flutter_first_project/screens/Messagerie_screen/Parent_Messagerie_screen.dart';
 import 'package:flutter_first_project/screens/Messagerie_screen/Teacher_Messagerie_screen.dart';
+import 'package:flutter_first_project/screens/Messagerie_screen/Teacher_messages/Ratrapage_Demande/Ratrapage_Demande.dart';
 import 'package:flutter_first_project/screens/login_screen/login_screen.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:http/http.dart' as http;
@@ -39,7 +40,8 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     _teacherDetailsFuture = Future.value(null);
   }
-    void _logout() {
+
+  void _logout() {
     // Clear any user session or token here
     // Example: Implementing simple pop to the login screen
     Navigator.popUntil(context, ModalRoute.withName('/'));
@@ -245,12 +247,32 @@ class _HomeScreenState extends State<HomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         HomeCard(
-                          onPress: () {},
+                          onPress: () {
+                            /*Navigator.pushNamed(
+                              context,
+                              RatrapageScreen.routeName,
+                              arguments: {
+                                'iduser': int.parse(teacherDetails.id),
+                                'idetablissement':
+                                    int.parse(teacherDetails.idEtablissement),
+                              },
+                            );*/
+                          },
                           icon: 'assets/icons/holiday.svg',
                           title: 'Demande D\'absences',
                         ),
                         HomeCard(
-                          onPress: () {},
+                          onPress: () {
+                            Navigator.pushNamed(
+                              context,
+                              RatrapageScreen.routeName,
+                              arguments: {
+                                'iduser': int.parse(teacherDetails.id),
+                                'idetablissement':
+                                    int.parse(teacherDetails.idEtablissement),
+                              },
+                            );
+                          },
                           icon: 'assets/icons/timetable.svg',
                           title: 'Demande De Rattrapage',
                         ),
