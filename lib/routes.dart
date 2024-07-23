@@ -3,6 +3,7 @@ import 'package:flutter_first_project/screens/Messagerie_screen/Parent_Messageri
 import 'package:flutter_first_project/screens/Messagerie_screen/Parent_mesaages/chatPage.dart';
 import 'package:flutter_first_project/screens/Messagerie_screen/Parent_mesaages/send.dart';
 import 'package:flutter_first_project/screens/Messagerie_screen/Teacher_Messagerie_screen.dart';
+import 'package:flutter_first_project/screens/Messagerie_screen/Teacher_messages/Abscence_Demande/Abscence.dart';
 import 'package:flutter_first_project/screens/Messagerie_screen/Teacher_messages/ChatPage.dart';
 import 'package:flutter_first_project/screens/Messagerie_screen/Teacher_messages/Ratrapage_Demande/Ratrapage_Demande.dart';
 import 'package:flutter_first_project/screens/Messagerie_screen/Teacher_messages/send_to_parent.dart';
@@ -31,4 +32,6 @@ Map<String, WidgetBuilder> routes = {
   ChatPage.routeName: (context) => ChatPage(),
   ChatTeacherPage.routeName: (context) => ChatTeacherPage(),
   SendToParentPage.routeName: (context) => SendToParentPage(),
+  AbscenceScreen.routeName: (context) => AbscenceScreen(),
+  
 };

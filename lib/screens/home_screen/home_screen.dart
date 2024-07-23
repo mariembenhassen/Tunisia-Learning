@@ -6,6 +6,7 @@ import 'package:flutter_first_project/components/side_menu.dart';
 import 'package:flutter_first_project/constante.dart';
 import 'package:flutter_first_project/screens/Messagerie_screen/Parent_Messagerie_screen.dart';
 import 'package:flutter_first_project/screens/Messagerie_screen/Teacher_Messagerie_screen.dart';
+import 'package:flutter_first_project/screens/Messagerie_screen/Teacher_messages/Abscence_Demande/Abscence.dart';
 import 'package:flutter_first_project/screens/Messagerie_screen/Teacher_messages/Ratrapage_Demande/Ratrapage_Demande.dart';
 import 'package:flutter_first_project/screens/login_screen/login_screen.dart';
 import 'package:flutter_svg/svg.dart';
@@ -248,15 +249,15 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: [
                         HomeCard(
                           onPress: () {
-                            /*Navigator.pushNamed(
+                            Navigator.pushNamed(
                               context,
-                              RatrapageScreen.routeName,
+                              AbscenceScreen.routeName,
                               arguments: {
                                 'iduser': int.parse(teacherDetails.id),
                                 'idetablissement':
                                     int.parse(teacherDetails.idEtablissement),
                               },
-                            );*/
+                            );
                           },
                           icon: 'assets/icons/holiday.svg',
                           title: 'Demande D\'absences',
@@ -278,31 +279,14 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ],
                     ),
+               
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        HomeCard(
+                      HomeCard(
                           onPress: () {},
                           icon: 'assets/icons/result.svg',
                           title: 'Result',
-                        ),
-                        HomeCard(
-                          onPress: () {
-                            // Navigator.pushNamed(
-                            //  context, DateSheetScreen.routeName);
-                          },
-                          icon: 'assets/icons/datesheet.svg',
-                          title: 'DateSheet',
-                        ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        HomeCard(
-                          onPress: () {},
-                          icon: 'assets/icons/ask.svg',
-                          title: 'Ask',
                         ),
                         HomeCard(
                           onPress: () {
