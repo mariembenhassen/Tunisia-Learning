@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'package:flutter/material.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -210,7 +209,13 @@ class _SendToParentPageState extends State<SendToParentPage> {
                     onPressed: _selectParent,
                     child: Text('Search Parent'),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue[700],
+                      backgroundColor: Colors.blue[700], // Background color
+                      padding: EdgeInsets.symmetric(
+                          vertical: 12, horizontal: 20), // Adjust padding
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      textStyle: TextStyle(fontSize: 14), // Adjust font size
                     ),
                   ),
                   SizedBox(height: 20),
@@ -229,7 +234,13 @@ class _SendToParentPageState extends State<SendToParentPage> {
                     onPressed: _selectStudent,
                     child: Text('Search Student'),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue[700],
+                      backgroundColor: Colors.blue[700], // Background color
+                      padding: EdgeInsets.symmetric(
+                          vertical: 12, horizontal: 20), // Adjust padding
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      textStyle: TextStyle(fontSize: 14), // Adjust font size
                     ),
                   ),
                   SizedBox(height: 20),
@@ -257,13 +268,77 @@ class _SendToParentPageState extends State<SendToParentPage> {
             // Send Button
             ElevatedButton(
               onPressed: _sendMessage,
-              child: Text('Send Message'),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue[800],
-                padding: EdgeInsets.symmetric(vertical: 15.0),
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.blueAccent,
+                padding: EdgeInsets.symmetric(
+                    vertical: 18, horizontal: 24), // Increased padding
+                shape: RoundedRectangleBorder(
+                  borderRadius:
+                      BorderRadius.circular(12), // Adjust the border radius
+                ),
+                minimumSize: Size(double.infinity,
+                    50), // Ensure button is at least this height
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.send, size: 20), // Add the icon
+                  SizedBox(width: 10), // Space between the icon and text
+                  Text('Envoyer',
+                      style: TextStyle(fontSize: 16)), // Adjust font size
+                ],
               ),
             ),
           ],
+        ),
+      ),
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              blurRadius: 20,
+              color: Colors.black.withOpacity(.1),
+            )
+          ],
+        ),
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
+            child: GNav(
+              rippleColor: Colors.grey[300]!,
+              hoverColor: Colors.grey[100]!,
+              gap: 8,
+              activeColor: Colors.black,
+              iconSize: 24,
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              duration: Duration(milliseconds: 400),
+              tabBackgroundColor: Colors.blue[600]!,
+              color: Colors.black,
+              tabs: [
+                GButton(
+                  icon: Icons.message,
+                  text: 'Messages',
+                ),
+                GButton(
+                  icon: Icons.list_alt,
+                  text: 'Sélectionner',
+                ),
+                GButton(
+                  icon: Icons.library_add,
+                  text: 'Envoyer',
+                ),
+              ],
+              selectedIndex: 2,
+              onTabChange: (index) {
+                if (index == 1) {
+                } else if (index == 0) {
+                  Navigator.of(context).pop();
+                }
+              },
+            ),
+          ),
         ),
       ),
     );
@@ -279,7 +354,7 @@ class ParentSearchDelegate extends SearchDelegate<dynamic> {
   List<Widget> buildActions(BuildContext context) {
     return [
       IconButton(
-        icon: Icon(Icons.clear),
+        icon: Icon(Icons.clear, color: Colors.blue[700]), // Change icon color
         onPressed: () {
           query = '';
         },
@@ -290,7 +365,8 @@ class ParentSearchDelegate extends SearchDelegate<dynamic> {
   @override
   Widget buildLeading(BuildContext context) {
     return IconButton(
-      icon: Icon(Icons.arrow_back),
+      icon:
+          Icon(Icons.arrow_back, color: Colors.blue[700]), // Change icon color
       onPressed: () {
         close(context, null);
       },
@@ -307,7 +383,13 @@ class ParentSearchDelegate extends SearchDelegate<dynamic> {
     return ListView(
       children: results.map<Widget>((parent) {
         return ListTile(
-          title: Text(parent['nomprenom']),
+          title: Text(
+            parent['nomprenom'],
+            style: TextStyle(
+                fontSize: 14,
+                color: Colors.blue[800]), // Adjust text size and color
+          ),
+          tileColor: Colors.blue[50], // Background color
           onTap: () {
             close(context, parent);
           },
@@ -326,7 +408,13 @@ class ParentSearchDelegate extends SearchDelegate<dynamic> {
     return ListView(
       children: suggestions.map<Widget>((parent) {
         return ListTile(
-          title: Text(parent['nomprenom']),
+          title: Text(
+            parent['nomprenom'],
+            style: TextStyle(
+                fontSize: 14,
+                color: Colors.blue[800]), // Adjust text size and color
+          ),
+          tileColor: Colors.blue[50], // Background color
           onTap: () {
             close(context, parent);
           },
@@ -345,7 +433,7 @@ class StudentSearchDelegate extends SearchDelegate<dynamic> {
   List<Widget> buildActions(BuildContext context) {
     return [
       IconButton(
-        icon: Icon(Icons.clear),
+        icon: Icon(Icons.clear, color: Colors.blue[700]), // Change icon color
         onPressed: () {
           query = '';
         },
@@ -356,7 +444,8 @@ class StudentSearchDelegate extends SearchDelegate<dynamic> {
   @override
   Widget buildLeading(BuildContext context) {
     return IconButton(
-      icon: Icon(Icons.arrow_back),
+      icon:
+          Icon(Icons.arrow_back, color: Colors.blue[700]), // Change icon color
       onPressed: () {
         close(context, null);
       },
@@ -373,7 +462,13 @@ class StudentSearchDelegate extends SearchDelegate<dynamic> {
     return ListView(
       children: results.map<Widget>((student) {
         return ListTile(
-          title: Text(student['nomprenom']),
+          title: Text(
+            student['nomprenom'],
+            style: TextStyle(
+                fontSize: 14,
+                color: Colors.blue[800]), // Adjust text size and color
+          ),
+          tileColor: Colors.blue[50], // Background color
           onTap: () {
             close(context, student);
           },
@@ -392,7 +487,13 @@ class StudentSearchDelegate extends SearchDelegate<dynamic> {
     return ListView(
       children: suggestions.map<Widget>((student) {
         return ListTile(
-          title: Text(student['nomprenom']),
+          title: Text(
+            student['nomprenom'],
+            style: TextStyle(
+                fontSize: 14,
+                color: Colors.blue[800]), // Adjust text size and color
+          ),
+          tileColor: Colors.blue[50], // Background color
           onTap: () {
             close(context, student);
           },
@@ -401,4 +502,3 @@ class StudentSearchDelegate extends SearchDelegate<dynamic> {
     );
   }
 }
-

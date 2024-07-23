@@ -43,6 +43,38 @@ class _TeacherMessagingPageState extends State<TeacherMessagingPage> {
     });
   }
 
+  Future<void> _updateMessageStatus(int messageId, int lu) async {
+    final url =
+        'http://localhost/Tunisia_Learning_backend/TunisiaLearningPhp/update_lu_state.php';
+    final headers = {'Content-Type': 'application/json'};
+    final body = json.encode({
+      'messageId': messageId,
+      'lu': lu,
+    });
+
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: headers,
+        body: body,
+      );
+
+      if (response.statusCode == 200) {
+        final responseBody = json.decode(response.body);
+        if (responseBody['status'] == 'success') {
+          print('Message status updated successfully.');
+        } else {
+          print('Failed to update message status: ${responseBody['message']}');
+        }
+      } else {
+        print(
+            'Failed to update message status. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
   Future<void> _fetchParents() async {
     try {
       final response = await http.get(Uri.parse(
@@ -175,7 +207,11 @@ class _TeacherMessagingPageState extends State<TeacherMessagingPage> {
                     bool isUnseen = message['lu'] == '1';
 
                     return GestureDetector(
-                      onTap: () {
+                      onTap: () async {
+                        // Update message status before navigating
+                        await _updateMessageStatus(
+                            int.parse(message['id']), 0); // Mark as seen
+
                         Navigator.pushNamed(
                           context,
                           ChatTeacherPage.routeName,
