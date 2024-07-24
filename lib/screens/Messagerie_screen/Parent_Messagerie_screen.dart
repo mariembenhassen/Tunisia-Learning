@@ -7,6 +7,8 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
+
+
 class ParentMessagingPage extends StatefulWidget {
   static const routeName = '/parent_messagerie';
 
@@ -221,10 +223,11 @@ class _ParentMessagingPageState extends State<ParentMessagingPage> {
                     ? '${message['mail'].substring(0, 50)}...'
                     : message['mail'];
                 bool isUnseen = message['lu'] == '1';
+                bool isMoi = message['sender_name'] == 'Moi';
 
                 return GestureDetector(
                   onTap: () {
-                    if (isUnseen) {
+                    if (isUnseen && !isMoi) {
                       updateMessageState(int.parse(message['id']), 0);
                     }
                     Navigator.pushNamed(
@@ -241,7 +244,8 @@ class _ParentMessagingPageState extends State<ParentMessagingPage> {
                     margin: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                     padding: EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: isUnseen ? Colors.grey[100] : Colors.white,
+                      color:
+                          isUnseen && !isMoi ? Colors.grey[100] : Colors.white,
                       borderRadius: BorderRadius.circular(12),
                       boxShadow: [
                         BoxShadow(
@@ -295,7 +299,7 @@ class _ParentMessagingPageState extends State<ParentMessagingPage> {
                                             size: 22,
                                           ),
                                           onPressed: () {
-                                            if (isUnseen) {
+                                            if (isUnseen && !isMoi) {
                                               updateMessageState(
                                                   int.parse(message['id']), 0);
                                             }
@@ -305,25 +309,24 @@ class _ParentMessagingPageState extends State<ParentMessagingPage> {
                                               arguments: {
                                                 'idSource': int.parse(
                                                     message['idsource']),
-                                                'selectedTeacherId':
-                                                    selectedTeacher,
+                                                'selectedTeacherId': int.parse(
+                                                    message['idsender']),
                                                 'idUser': idUser,
                                               },
                                             );
                                           },
                                         ),
                                       ),
+                                      Icon(
+                                        Icons.mail,
+                                        color: isMoi
+                                            ? Colors.grey
+                                            : isUnseen
+                                                ? Colors.red
+                                                : Colors.green,
+                                      ),
                                     ],
                                   ),
-                                  isUnseen
-                                      ? Icon(
-                                          Icons.mark_email_unread,
-                                          color: Colors.red,
-                                        )
-                                      : Icon(
-                                          Icons.done,
-                                          color: Colors.grey,
-                                        ),
                                 ],
                               ),
                             ],
@@ -335,7 +338,6 @@ class _ParentMessagingPageState extends State<ParentMessagingPage> {
                 );
               },
             ),
-      backgroundColor: Colors.white,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.pushNamed(
@@ -353,57 +355,6 @@ class _ParentMessagingPageState extends State<ParentMessagingPage> {
         backgroundColor: Colors.blue[600],
         elevation: 8.0,
         tooltip: 'Send a new message',
-      ),
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.2),
-              spreadRadius: 1,
-              blurRadius: 5,
-              offset: Offset(0, -1),
-            ),
-          ],
-        ),
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
-            child: GNav(
-              rippleColor: Colors.grey[300]!,
-              hoverColor: Colors.grey[100]!,
-              gap: 8,
-              activeColor: Colors.white,
-              iconSize: 24,
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-              duration: Duration(milliseconds: 400),
-              tabBackgroundColor: Colors.blue[600]!,
-              color: Colors.black,
-              tabs: [
-                GButton(
-                  icon: Icons.message,
-                  text: 'Messages',
-                ),
-                GButton(
-                  icon: Icons.list_alt,
-                  text: 'Sélectionner',
-                ),
-                GButton(
-                  icon: Icons.library_add,
-                  text: 'Envoyer',
-                ),
-              ],
-              selectedIndex: 0,
-              onTabChange: (index) {
-                if (index == 1) {
-                  // Implement the action for the second tab
-                } else if (index == 2) {
-                  // Implement the action for the third tab
-                }
-              },
-            ),
-          ),
-        ),
       ),
     );
   }
