@@ -6,6 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_first_project/components/side_menu_parent.dart';
 import 'package:flutter_first_project/screens/Doc_Screen/Doc_Screen.dart';
 import 'package:flutter_first_project/screens/Messagerie_screen/Parent_Messagerie_screen.dart';
+import 'package:flutter_first_project/screens/Notification_screen/notifparent.dart';
 import 'package:flutter_first_project/screens/assignment_screen/course_list_screen.dart';
 import 'package:flutter_first_project/screens/data/course_model.dart';
 import 'package:flutter_first_project/screens/emploi_du_temps_screen/emploi_du_temps_screen.dart';
@@ -15,10 +16,27 @@ import 'package:flutter_svg/svg.dart';
 import 'package:sizer/sizer.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
-import 'package:flutter/material.dart';
-
+/*
 class ChildDetailScreen extends StatelessWidget {
   static const routeName = 'ChildDetailScreen';
+*/
+
+class ChildDetailScreen extends StatefulWidget {
+  static const routeName = 'ChildDetailScreen';
+
+  @override
+  _ChildDetailScreenState createState() => _ChildDetailScreenState();
+}
+
+class _ChildDetailScreenState extends State<ChildDetailScreen> {
+  bool _hasNotifications = false;
+  String _notificationMessage = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _checkNotifications();
+  }
 
   final String apiUrl =
       'http://localhost/Tunisia_Learning_backend/TunisiaLearningPhp/get_child_detail.php';
@@ -33,6 +51,72 @@ class ChildDetailScreen extends StatelessWidget {
       return json.decode(response.body)['data'];
     } else {
       throw Exception('Failed to load child details');
+    }
+  }
+
+  Future<void> _checkNotifications() async {
+    final int parentId = 1; // Replace with the actual parentId
+    final response = await http.get(
+      Uri.parse(
+          'http://localhost/Tunisia_Learning_backend/TunisiaLearningPhp/get_notif.php?iduser=$parentId'),
+    );
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      setState(() {
+        _hasNotifications = data['message'] != "Aucun nouveau message.";
+        _notificationMessage = data['message'];
+      });
+    } else {
+      // Handle error
+    }
+  }
+
+  void _showNotificationDialog() {
+    if (_notificationMessage.isNotEmpty) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            backgroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            title: Text(
+              'Notification',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.normal,
+                color: Colors.black,
+              ),
+            ),
+            content: Text(
+              _notificationMessage,
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.black87,
+              ),
+            ),
+            actions: [
+              TextButton(
+                style: TextButton.styleFrom(
+                  backgroundColor:
+                      kPrimaryColor, // Replace with your blue color
+                ),
+                child: Text(
+                  'OK',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
     }
   }
 
@@ -73,10 +157,10 @@ class ChildDetailScreen extends StatelessWidget {
               ),
         ),
         actions: [
-          IconButton(
-            icon: Icon(Icons.notifications, size: 30),
-            onPressed: () {
-              // Handle bell icon press
+          NotificationBell(
+            hasNotifications: _hasNotifications,
+            onPress: () {
+              _showNotificationDialog();
             },
           ),
           Padding(
@@ -110,7 +194,7 @@ class ChildDetailScreen extends StatelessWidget {
           ),
         ],
       ),
-      drawer: const SideMenu(),
+      //drawer: const SideMenu(),
       body: FutureBuilder<Map<String, dynamic>>(
         future: futureChildDetails,
         builder: (context, snapshot) {
@@ -349,11 +433,6 @@ class ChildDetailScreen extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             HomeCard(
-                              onPress: () {},
-                              icon: 'assets/icons/result.svg',
-                              title: 'Résultats',
-                            ),
-                            HomeCard(
                               onPress: () {
                                 // Navigator.pushNamed(
                                 // context, DateSheetScreen.routeName);
@@ -361,23 +440,16 @@ class ChildDetailScreen extends StatelessWidget {
                               icon: 'assets/icons/holiday.svg',
                               title: 'Évènement',
                             ),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            HomeCard(
-                              onPress: () {},
-                              icon: 'assets/icons/result.svg',
-                              title: 'Résultats',
-                            ),
                             HomeCard(
                               onPress: () {
-                                // Navigator.pushNamed(
-                                // context, DateSheetScreen.routeName);
+                                Navigator.pushNamedAndRemoveUntil(
+                                  context,
+                                  LoginScreen.routeName,
+                                  (Route<dynamic> route) => false,
+                                );
                               },
-                              icon: 'assets/icons/datesheet.svg',
-                              title: 'Feuille de date',
+                              icon: 'assets/icons/logout.svg',
+                              title: 'Logout',
                             ),
                           ],
                         ),

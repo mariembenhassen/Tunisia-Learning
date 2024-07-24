@@ -46,8 +46,7 @@ class _DocScreenState extends State<DocScreen> {
   Future<List<Document>> fetchDocuments(
       int idEtablissement, int idNiveau, int idClasse) async {
     final baseUrl =
-        //'http://localhost/Tunisia_Learning_backend/TunisiaLearningPhp/get_doc.php?idetablissement=$idEtablissement&idniveau=$idNiveau&idclasse=$idClasse';
-        'http://localhost/Tunisia_Learning_backend/TunisiaLearningPhp/get_doc.php?idetablissement=2&idniveau=1&idclasse=0';
+        'http://localhost/Tunisia_Learning_backend/TunisiaLearningPhp/get_doc.php?idetablissement=$idEtablissement&idniveau=$idNiveau&idclasse=$idClasse';
 
     final response = await http.get(Uri.parse(baseUrl));
 

@@ -1,24 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
-
-import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_first_project/screens/Messagerie_screen/Parent_Messagerie_screen.dart';
-import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:flutter/material.dart';
-import 'package:google_nav_bar/google_nav_bar.dart';
-
-import 'package:flutter/material.dart';
-import 'package:flutter_first_project/screens/Messagerie_screen/Parent_Messagerie_screen.dart';
-import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:http/http.dart' as http;
 import 'dart:convert';
-
-import 'package:flutter/material.dart';
-import 'package:flutter_first_project/screens/Messagerie_screen/Parent_Messagerie_screen.dart';
-import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class MessageSendingPage extends StatefulWidget {
   static const routeName = '/sendMessagePage';
@@ -171,7 +154,7 @@ class _MessageSendingPageState extends State<MessageSendingPage> {
               onPressed: _sendMessage,
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.white,
-                backgroundColor: Colors.blueAccent,
+                backgroundColor: Color.fromARGB(255, 44, 50, 202),
                 padding: EdgeInsets.symmetric(vertical: 15),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
@@ -181,54 +164,6 @@ class _MessageSendingPageState extends State<MessageSendingPage> {
             ),
             SizedBox(height: 20),
           ],
-        ),
-      ),
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              blurRadius: 20,
-              color: Colors.black.withOpacity(.1),
-            )
-          ],
-        ),
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
-            child: GNav(
-              rippleColor: Colors.grey[300]!,
-              hoverColor: Colors.grey[100]!,
-              gap: 8,
-              activeColor: Colors.black,
-              iconSize: 24,
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-              duration: Duration(milliseconds: 400),
-              tabBackgroundColor: Colors.blue[600]!,
-              color: Colors.black,
-              tabs: [
-                GButton(
-                  icon: Icons.message,
-                  text: 'Messages',
-                ),
-                GButton(
-                  icon: Icons.list_alt,
-                  text: 'Sélectionner',
-                ),
-                GButton(
-                  icon: Icons.library_add,
-                  text: 'Envoyer',
-                ),
-              ],
-              selectedIndex: 2,
-              onTabChange: (index) {
-                if (index == 1) {
-                } else if (index == 0) {
-                  Navigator.of(context).pop();
-                }
-              },
-            ),
-          ),
         ),
       ),
     );

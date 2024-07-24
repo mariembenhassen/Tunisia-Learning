@@ -7,8 +7,6 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
-
-
 class ParentMessagingPage extends StatefulWidget {
   static const routeName = '/parent_messagerie';
 
@@ -188,7 +186,7 @@ class _ParentMessagingPageState extends State<ParentMessagingPage> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(100.0),
         child: AppBar(
-          backgroundColor: Colors.blue[600],
+          backgroundColor: const Color.fromARGB(255, 11, 102, 182),
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[

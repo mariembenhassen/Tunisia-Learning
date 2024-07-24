@@ -8,6 +8,7 @@ import 'package:flutter_first_project/screens/Messagerie_screen/Teacher_messages
 import 'package:flutter_first_project/screens/Messagerie_screen/Teacher_messages/ChatPage.dart';
 import 'package:flutter_first_project/screens/Messagerie_screen/Teacher_messages/Ratrapage_Demande/Ratrapage_Demande.dart';
 import 'package:flutter_first_project/screens/Messagerie_screen/Teacher_messages/send_to_parent.dart';
+import 'package:flutter_first_project/screens/Notification_screen/teachernotif.dart';
 
 import 'package:flutter_first_project/screens/assignment_screen/course_list_screen.dart';
 import 'package:flutter_first_project/screens/emploi_du_temps_screen/emploi_du_temps_screen.dart';
@@ -35,4 +36,5 @@ Map<String, WidgetBuilder> routes = {
   SendToParentPage.routeName: (context) => SendToParentPage(),
   AbscenceScreen.routeName: (context) => AbscenceScreen(),
   MessageSendingPage.routeName: (context) => MessageSendingPage(),
+  TeacherNotifScreen.routeName: (context) => TeacherNotifScreen(),
 };

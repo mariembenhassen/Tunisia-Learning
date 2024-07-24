@@ -8,7 +8,9 @@ import 'package:flutter_first_project/screens/Messagerie_screen/Parent_Messageri
 import 'package:flutter_first_project/screens/Messagerie_screen/Teacher_Messagerie_screen.dart';
 import 'package:flutter_first_project/screens/Messagerie_screen/Teacher_messages/Abscence_Demande/Abscence.dart';
 import 'package:flutter_first_project/screens/Messagerie_screen/Teacher_messages/Ratrapage_Demande/Ratrapage_Demande.dart';
+import 'package:flutter_first_project/screens/Notification_screen/teachernotif.dart';
 import 'package:flutter_first_project/screens/login_screen/login_screen.dart';
+
 import 'package:flutter_first_project/screens/my_profile/my_profile.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:http/http.dart' as http;
@@ -33,6 +35,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late Future<TeacherDetails?> _teacherDetailsFuture;
+  late Future<int> _notificationCountFuture;
   late String id;
   late String nom;
   late String prenom;
@@ -41,10 +44,10 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _teacherDetailsFuture = Future.value(null);
+    _notificationCountFuture = fetchNotificationCount();
   }
 
   void _logout() {
-    // Clear any user session or token here
     Navigator.pushReplacementNamed(context, LoginScreen.routeName);
   }
 
@@ -59,6 +62,32 @@ class _HomeScreenState extends State<HomeScreen> {
     nom = args['nom'] ?? '';
     prenom = args['prenom'] ?? '';
     _teacherDetailsFuture = fetchTeacherDetails();
+    _notificationCountFuture = fetchNotificationCount();
+  }
+
+  Future<int> fetchNotificationCount() async {
+    try {
+      final response = await http.get(
+        Uri.parse(
+            'http://localhost//Tunisia_Learning_backend/TunisiaLearningPhp/get_notification_mssg.php?iduser=1'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
+
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        return data['count'] ?? 0;
+      } else {
+        throw Exception('Failed to load notification count');
+      }
+    } catch (e) {
+      print('Error fetching notification count: $e');
+      return 0;
+    }
   }
 
   Future<TeacherDetails?> fetchTeacherDetails() async {
@@ -97,6 +126,49 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: Text('Tunisia Learning', style: TextStyle(color: Colors.white)),
         actions: [
+          FutureBuilder<int>(
+            future: _notificationCountFuture,
+            builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
+              int count = snapshot.data ?? 0;
+              return Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  IconButton(
+                    icon: Icon(
+                      Icons.notifications,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {},
+                  ),
+                  if (count > 0)
+                    Positioned(
+                      right: 8,
+                      top: 8,
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 6),
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        constraints: BoxConstraints(
+                          minWidth: 24,
+                          minHeight: 24,
+                        ),
+                        child: Center(
+                          child: Text(
+                            '$count',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              );
+            },
+          ),
           PopupMenuButton<String>(
             onSelected: (String value) {
               switch (value) {
@@ -108,7 +180,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   );
                   break;
                 case 'Logout':
-                  // Handle logout logic here
+                  _logout();
                   break;
               }
             },
@@ -117,7 +189,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 value: 'Profile Paramètre',
                 child: Row(
                   children: [
-                    Icon(Icons.settings, color: Colors.black), // Settings icon
+                    Icon(Icons.settings, color: Colors.black),
                     SizedBox(width: 8),
                     Text('Profile Paramètre'),
                   ],
@@ -127,7 +199,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 value: 'Logout',
                 child: Row(
                   children: [
-                    Icon(Icons.logout, color: Colors.black), // Logout icon
+                    Icon(Icons.logout, color: Colors.black),
                     SizedBox(width: 8),
                     Text('Logout'),
                   ],
@@ -327,8 +399,14 @@ class _HomeScreenState extends State<HomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         HomeCard(
-                          onPress: () {},
-                          icon: 'assets/icons/result.svg',
+                          onPress: () {
+                            Navigator.pushNamed(
+                                context, MyProfileScreen.routeName,
+                                arguments: {
+                                  'iduser': int.parse(teacherDetails.id),
+                                });
+                          },
+                          icon: 'assets/icons/resume.svg',
                           title: 'Result',
                         ),
                         HomeCard(
