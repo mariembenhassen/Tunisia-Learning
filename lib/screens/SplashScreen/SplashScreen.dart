@@ -9,7 +9,7 @@ class SplashScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     //now the implement of the futur page login
     Future.delayed(
-        Duration(seconds: 5),
+        Duration(seconds: 3),
         () => Navigator.pushNamedAndRemoveUntil(
             context, LoginScreen.routeName, (route) => false));
 

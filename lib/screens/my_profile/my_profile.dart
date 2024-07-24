@@ -157,10 +157,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                   SizedBox(width: 8),
                   Text(
                     'Report',
-                    style: Theme.of(context)
-                        .textTheme
-                        .subtitle2
-                        ?.copyWith(color: const Color.fromARGB(255, 255, 255, 255)),
+                    style: Theme.of(context).textTheme.subtitle2?.copyWith(
+                        color: const Color.fromARGB(255, 255, 255, 255)),
                   ),
                 ],
               ),

@@ -17,7 +17,7 @@ class _SendToParentPageState extends State<SendToParentPage> {
   late int idEtablissement;
   dynamic selectedParent;
   dynamic selectedStudent;
-  String recipientType = 'None'; // Track the selected recipient type
+  String recipientType = 'Aucun'; // Track the selected recipient type
   TextEditingController _messageController = TextEditingController();
 
   @override
@@ -80,7 +80,7 @@ class _SendToParentPageState extends State<SendToParentPage> {
   }
 
   void _sendMessage() async {
-    if (recipientType == 'None') {
+    if (recipientType == 'Aucun') {
       _showError('Please select a recipient type.');
       return;
     }
@@ -154,7 +154,13 @@ class _SendToParentPageState extends State<SendToParentPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Send Message'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        title: Text('Envoyer Message', style: TextStyle(color: Colors.white)),
         backgroundColor: Colors.blue[800],
       ),
       body: Container(
@@ -177,18 +183,18 @@ class _SendToParentPageState extends State<SendToParentPage> {
               value: recipientType,
               onChanged: (String? newValue) {
                 setState(() {
-                  recipientType = newValue ?? 'None';
+                  recipientType = newValue ?? 'Aucun';
                   selectedParent = null; // Clear previous selections
                   selectedStudent = null;
                 });
               },
-              items: <String>['None', 'Parent', 'Student']
+              items: <String>['Aucun', 'Parent', 'Student']
                   .map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
                   child: Container(
-                    color:
-                        Colors.blue[50], // Background color of dropdown items
+                    color: Colors
+                        .transparent, // Background color of dropdown items
                     padding: EdgeInsets.symmetric(vertical: 8.0),
                     child: Text(
                       value,
@@ -207,7 +213,8 @@ class _SendToParentPageState extends State<SendToParentPage> {
                 children: <Widget>[
                   ElevatedButton(
                     onPressed: _selectParent,
-                    child: Text('Search Parent'),
+                    child: Text('Search Parent',
+                        style: TextStyle(color: Colors.white)),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue[700], // Background color
                       padding: EdgeInsets.symmetric(
@@ -232,7 +239,8 @@ class _SendToParentPageState extends State<SendToParentPage> {
                 children: <Widget>[
                   ElevatedButton(
                     onPressed: _selectStudent,
-                    child: Text('Search Student'),
+                    child: Text('Search Student',
+                        style: TextStyle(color: Colors.white)),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue[700], // Background color
                       padding: EdgeInsets.symmetric(
@@ -256,6 +264,7 @@ class _SendToParentPageState extends State<SendToParentPage> {
             // Message TextField
             TextField(
               controller: _messageController,
+              style: TextStyle(color: Colors.black38),
               decoration: InputDecoration(
                 labelText: 'Type your message here',
                 border: OutlineInputBorder(),
@@ -291,54 +300,6 @@ class _SendToParentPageState extends State<SendToParentPage> {
               ),
             ),
           ],
-        ),
-      ),
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              blurRadius: 20,
-              color: Colors.black.withOpacity(.1),
-            )
-          ],
-        ),
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
-            child: GNav(
-              rippleColor: Colors.grey[300]!,
-              hoverColor: Colors.grey[100]!,
-              gap: 8,
-              activeColor: Colors.black,
-              iconSize: 24,
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-              duration: Duration(milliseconds: 400),
-              tabBackgroundColor: Colors.blue[600]!,
-              color: Colors.black,
-              tabs: [
-                GButton(
-                  icon: Icons.message,
-                  text: 'Messages',
-                ),
-                GButton(
-                  icon: Icons.list_alt,
-                  text: 'Sélectionner',
-                ),
-                GButton(
-                  icon: Icons.library_add,
-                  text: 'Envoyer',
-                ),
-              ],
-              selectedIndex: 2,
-              onTabChange: (index) {
-                if (index == 1) {
-                } else if (index == 0) {
-                  Navigator.of(context).pop();
-                }
-              },
-            ),
-          ),
         ),
       ),
     );

@@ -1,12 +1,10 @@
 import 'dart:convert';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_first_project/screens/Messagerie_screen/Parent_mesaages/chatPage.dart';
-
+import 'package:flutter_first_project/screens/Messagerie_screen/Parent_mesaages/send.dart';
 import 'package:flutter_first_project/screens/home_screen/child_detail_screen.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:google_nav_bar/google_nav_bar.dart';
-
 import 'package:google_nav_bar/google_nav_bar.dart';
 
 class ParentMessagingPage extends StatefulWidget {
@@ -121,7 +119,7 @@ class _ParentMessagingPageState extends State<ParentMessagingPage> {
   void fetchMessages(int idUser, int idEtablissement) async {
     String url =
         'http://localhost/Tunisia_Learning_backend/TunisiaLearningPhp/get_teacher_messages.php?iduser=$idUser&idetablissement=$idEtablissement';
-    // 'http://localhost/Tunisia_Learning_backend/TunisiaLearningPhp/get_teacher_messages.php?iduser=2059&idetablissement=1';
+
     try {
       var response = await http.get(Uri.parse(url));
 
@@ -342,7 +340,7 @@ class _ParentMessagingPageState extends State<ParentMessagingPage> {
         onPressed: () {
           Navigator.pushNamed(
             context,
-            '/sendMessagePage', // Replace with your route for the message sending page
+            '/sendMessagePage',
             arguments: {
               'childrenNames': childrenNames,
               'filteredTeachers': filteredTeacherNames,
