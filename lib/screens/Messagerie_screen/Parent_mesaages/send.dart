@@ -70,7 +70,7 @@ class _MessageSendingPageState extends State<MessageSendingPage> {
       backgroundColor: Colors.grey[200], // Light grey background
       appBar: AppBar(
         title: Text('Send Message'),
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: const Color.fromARGB(255, 21, 63, 137),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
