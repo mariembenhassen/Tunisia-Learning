@@ -9,6 +9,7 @@ import 'package:flutter_first_project/screens/Messagerie_screen/Teacher_Messager
 import 'package:flutter_first_project/screens/Messagerie_screen/Teacher_messages/Abscence_Demande/Abscence.dart';
 import 'package:flutter_first_project/screens/Messagerie_screen/Teacher_messages/Ratrapage_Demande/Ratrapage_Demande.dart';
 import 'package:flutter_first_project/screens/login_screen/login_screen.dart';
+import 'package:flutter_first_project/screens/my_profile/my_profile.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
@@ -44,8 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _logout() {
     // Clear any user session or token here
-    // Example: Implementing simple pop to the login screen
-    Navigator.popUntil(context, ModalRoute.withName('/'));
+    Navigator.pushReplacementNamed(context, LoginScreen.routeName);
   }
 
   @override
@@ -94,6 +94,50 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Tunisia Learning', style: TextStyle(color: Colors.white)),
+        actions: [
+          PopupMenuButton<String>(
+            onSelected: (String value) {
+              switch (value) {
+                case 'Profile Paramètre':
+                  Navigator.pushNamed(
+                    context,
+                    MyProfileScreen.routeName,
+                    arguments: {'id': id},
+                  );
+                  break;
+                case 'Logout':
+                  // Handle logout logic here
+                  break;
+              }
+            },
+            itemBuilder: (BuildContext context) => [
+              PopupMenuItem<String>(
+                value: 'Profile Paramètre',
+                child: Row(
+                  children: [
+                    Icon(Icons.settings, color: Colors.black), // Settings icon
+                    SizedBox(width: 8),
+                    Text('Profile Paramètre'),
+                  ],
+                ),
+              ),
+              PopupMenuItem<String>(
+                value: 'Logout',
+                child: Row(
+                  children: [
+                    Icon(Icons.logout, color: Colors.black), // Logout icon
+                    SizedBox(width: 8),
+                    Text('Logout'),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+      //drawer: SideMenu(id: id, nom: nom, prenom: prenom),
       body: FutureBuilder<TeacherDetails?>(
         future: _teacherDetailsFuture,
         builder: (context, snapshot) {
@@ -279,11 +323,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ],
                     ),
-               
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                      HomeCard(
+                        HomeCard(
                           onPress: () {},
                           icon: 'assets/icons/result.svg',
                           title: 'Result',
