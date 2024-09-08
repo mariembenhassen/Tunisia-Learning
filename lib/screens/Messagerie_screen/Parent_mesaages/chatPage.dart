@@ -2,10 +2,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import 'dart:convert';
-import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-
 class ChatPage extends StatefulWidget {
   static const routeName = '/chatPage';
 
@@ -52,8 +48,18 @@ class _ChatPageState extends State<ChatPage> {
 
       if (response.statusCode == 200) {
         var jsonData = json.decode(response.body);
+        List<Map<String, dynamic>> tempConversation =
+            List<Map<String, dynamic>>.from(jsonData);
+
+        // Sort the conversation list based on dateheure
+        tempConversation.sort((a, b) {
+          DateTime dateA = DateTime.parse(a['dateheure']);
+          DateTime dateB = DateTime.parse(b['dateheure']);
+          return dateA.compareTo(dateB);
+        });
+
         setState(() {
-          conversation = List<Map<String, dynamic>>.from(jsonData);
+          conversation = tempConversation;
         });
       } else {
         print('Failed to load conversation');
@@ -109,9 +115,10 @@ class _ChatPageState extends State<ChatPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[50], // Light grey background color
       appBar: AppBar(
-        title: Text('Conversation History'),
-        backgroundColor: Colors.blue[800],
+        title: Text('Chat with Teacher', style: TextStyle(color: Colors.white)),
+        backgroundColor: Color(0xFF345FB4),
       ),
       body: conversation.isEmpty
           ? Center(child: CircularProgressIndicator())
@@ -124,11 +131,11 @@ class _ChatPageState extends State<ChatPage> {
                       final message = conversation[index];
                       bool isMe = message['nom'] == 'Moi';
                       String senderName = isMe
-                          ? 'Moi'
+                          ? 'You'
                           : '${message['nom'] ?? ''} ${message['prenom'] ?? ''}';
-                      Color? bubbleColor =
-                          isMe ? Colors.blue[100] : Colors.grey[200];
-                      Color textColor = isMe ? Colors.black : Colors.black87;
+                      Color bubbleColor =
+                          isMe ? Color(0xFF007AFF) : Colors.white;
+                      Color textColor = isMe ? Colors.white : Colors.black87;
                       Alignment alignment =
                           isMe ? Alignment.centerRight : Alignment.centerLeft;
 
@@ -136,7 +143,7 @@ class _ChatPageState extends State<ChatPage> {
                         alignment: alignment,
                         child: Container(
                           margin: EdgeInsets.symmetric(
-                              vertical: 5.0, horizontal: 10.0),
+                              vertical: 8.0, horizontal: 12.0),
                           padding: EdgeInsets.all(12.0),
                           decoration: BoxDecoration(
                             color: bubbleColor,
@@ -152,10 +159,10 @@ class _ChatPageState extends State<ChatPage> {
                             ),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.grey.withOpacity(0.5),
+                                color: Colors.grey.withOpacity(0.2),
                                 spreadRadius: 1,
-                                blurRadius: 5,
-                                offset: Offset(0, 3),
+                                blurRadius: 4,
+                                offset: Offset(0, 2),
                               ),
                             ],
                           ),
@@ -167,14 +174,16 @@ class _ChatPageState extends State<ChatPage> {
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: textColor,
+                                  fontSize: 14.0,
                                 ),
                               ),
-                              SizedBox(height: 5.0),
+                              SizedBox(height: 4.0),
                               Text(
                                 message['mail'] ?? '',
-                                style: TextStyle(color: textColor),
+                                style:
+                                    TextStyle(color: textColor, fontSize: 16.0),
                               ),
-                              SizedBox(height: 5.0),
+                              SizedBox(height: 4.0),
                               Text(
                                 message['dateheure'] ?? '',
                                 style: TextStyle(
@@ -190,29 +199,52 @@ class _ChatPageState extends State<ChatPage> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(
+                      12.0), // Increased padding for better spacing
                   child: Row(
                     children: [
                       Expanded(
                         child: TextField(
                           controller: messageController,
-                           style: TextStyle(color: Colors.black), 
+                          style: TextStyle(color: Colors.black87),
                           decoration: InputDecoration(
                             hintText: 'Type a message',
+                            hintStyle: TextStyle(
+                                color: Colors.grey[600]), // Subtle hint color
                             border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20.0),
+                              borderRadius: BorderRadius.circular(
+                                  25.0), // Slightly larger radius
+                              borderSide:
+                                  BorderSide.none, // Remove default border
                             ),
                             filled: true,
-                            fillColor: Colors.grey[100],
+                            fillColor: Colors.white, // Clean white background
+                            contentPadding: EdgeInsets.symmetric(
+                              horizontal: 16.0,
+                              vertical:
+                                  12.0, // Increased vertical padding for a better typing experience
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(25.0),
+                              borderSide: BorderSide(
+                                  color: Color(0xFF007AFF),
+                                  width: 1.5), // Focus border color
+                            ),
                           ),
                         ),
                       ),
-                      SizedBox(width: 8.0),
+                      SizedBox(
+                          width:
+                              10.0), // Increased spacing between the text field and the button
                       CircleAvatar(
-                        backgroundColor: Colors.blue[800],
+                        backgroundColor: Colors.white, // Prominent button color
+                        radius:
+                            25.0, // Slightly larger radius for better touch target
                         child: IconButton(
-                          icon: Icon(Icons.send, color: Colors.white),
+                          icon: Icon(Icons.send,
+                              color: Color.fromARGB(255, 36, 44, 153)),
                           onPressed: sendMessage,
+                          iconSize: 20.0, // Adjusted icon size
                         ),
                       ),
                     ],
