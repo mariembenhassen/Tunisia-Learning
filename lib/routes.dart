@@ -1,3 +1,5 @@
+import 'package:flutter_first_project/frontassignmentpage.dart';
+import 'package:flutter_first_project/homeworktrackingpage.dart';
 import 'package:flutter_first_project/screens/Doc_Screen/Doc_Screen.dart';
 import 'package:flutter_first_project/screens/Messagerie_screen/Parent_Messagerie_screen.dart';
 import 'package:flutter_first_project/screens/Messagerie_screen/Parent_mesaages/chatPage.dart';
@@ -17,6 +19,7 @@ import 'package:flutter_first_project/screens/home_screen/parent_home_screen.dar
 import 'package:flutter_first_project/screens/login_screen/login_screen.dart';
 import 'package:flutter_first_project/screens/SplashScreen/SplashScreen.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_first_project/screens/teacher_coex/doc_insert.dart';
 import 'screens/home_screen/home_screen.dart';
 import 'screens/my_profile/my_profile.dart';
 
@@ -37,4 +40,7 @@ Map<String, WidgetBuilder> routes = {
   AbscenceScreen.routeName: (context) => AbscenceScreen(),
   MessageSendingPage.routeName: (context) => MessageSendingPage(),
   TeacherNotifScreen.routeName: (context) => TeacherNotifScreen(),
+  InsertDocScreen.routeName: (context) => InsertDocScreen(),
+  AssignmentPage.routeName: (context) => AssignmentPage(),
+  HomeworkTrackingPage.routeName: (context) => HomeworkTrackingPage(),
 };

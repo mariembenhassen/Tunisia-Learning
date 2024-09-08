@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_first_project/components/side_menu.dart';
 import 'package:flutter_first_project/constante.dart';
+import 'package:flutter_first_project/frontassignmentpage.dart';
 import 'package:flutter_first_project/screens/Messagerie_screen/Parent_Messagerie_screen.dart';
 import 'package:flutter_first_project/screens/Messagerie_screen/Teacher_Messagerie_screen.dart';
 import 'package:flutter_first_project/screens/Messagerie_screen/Teacher_messages/Abscence_Demande/Abscence.dart';
@@ -172,7 +173,7 @@ class _HomeScreenState extends State<HomeScreen> {
           PopupMenuButton<String>(
             onSelected: (String value) {
               switch (value) {
-                case 'Profile Paramètre':
+                case 'Profile Settings':
                   Navigator.pushNamed(
                     context,
                     MyProfileScreen.routeName,
@@ -231,16 +232,12 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       //the appbar part
 
-      //drawer: SideMenu(id: id, nom: nom, prenom: prenom),
       body: Column(
         children: [
-          // We will divide the screen into two parts
-          // Fixed height for first half
           Container(
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height / 4.5,
             padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 0),
-            // padding: EdgeInsets.all(20.0),
             color: kPrimaryColor,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -252,7 +249,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Nom d'utilisateur :",
+                          "User Name :",
                           style:
                               Theme.of(context).textTheme.titleMedium!.copyWith(
                                     fontSize: 12.0,
@@ -269,7 +266,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 )),
 
                         Text(
-                          'Nom d\'établissement :',
+                          'Institution Name:',
                           style:
                               Theme.of(context).textTheme.titleMedium!.copyWith(
                                     fontSize: 12.0,
@@ -285,7 +282,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 )),
 
                         Text(
-                          'Année scolaire en cours:',
+                          'Current School Year:',
                           style:
                               Theme.of(context).textTheme.titleMedium!.copyWith(
                                     fontSize: 12.0,
@@ -351,12 +348,14 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         HomeCard(
                           onPress: () {
-                            //go to assignment screen here
-                            //Navigator.pushNamed(
-                            //context, AssignmentScreen.routeName);
+                            Navigator.pushNamed(
+                              context,
+                              MyProfileScreen.routeName,
+                              arguments: {'id': id},
+                            );
                           },
-                          icon: 'assets/icons/assignment.svg',
-                          title: 'Cours et exercice',
+                          icon: 'assets/icons/resume.svg',
+                          title: 'Profil',
                         ),
                       ],
                     ),
@@ -376,7 +375,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             );
                           },
                           icon: 'assets/icons/holiday.svg',
-                          title: 'Demande D\'absences',
+                          title: 'Absence Request',
                         ),
                         HomeCard(
                           onPress: () {
@@ -391,7 +390,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             );
                           },
                           icon: 'assets/icons/timetable.svg',
-                          title: 'Demande De Rattrapage',
+                          title: 'Extra Lessons Request',
                         ),
                       ],
                     ),
@@ -399,15 +398,17 @@ class _HomeScreenState extends State<HomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         HomeCard(
-                          onPress: () {
-                            Navigator.pushNamed(
-                                context, MyProfileScreen.routeName,
-                                arguments: {
-                                  'iduser': int.parse(teacherDetails.id),
-                                });
-                          },
+                         onPress: () {
+    Navigator.pushNamed(
+      context,
+      AssignmentPage.routeName,
+      arguments: {
+        'iduser': int.parse(teacherDetails.id),
+      },
+    );
+  },
                           icon: 'assets/icons/resume.svg',
-                          title: 'Result',
+                          title: 'Assignement',
                         ),
                         HomeCard(
                           onPress: () {
