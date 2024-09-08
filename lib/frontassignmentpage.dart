@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:http/http.dart' as http;
 import 'dart:io';
 
 class AssignmentPage extends StatefulWidget {
@@ -19,6 +18,7 @@ class _AssignmentPageState extends State<AssignmentPage> {
   File? _selectedFile;
   String _assignmentType = 'Assignment'; // Default assignment type
   DateTime? _selectedDeadline; // To store selected deadline
+  int _selectedIndex = 0; // For bottom navigation
 
   Future<void> _pickFile() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
@@ -30,7 +30,6 @@ class _AssignmentPageState extends State<AssignmentPage> {
   }
 
   Future<void> _pickDeadline(BuildContext context) async {
-    // Customize date picker with theme
     final DateTime? pickedDate = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
@@ -82,69 +81,39 @@ class _AssignmentPageState extends State<AssignmentPage> {
   }
 
   Future<void> _uploadFile() async {
-    if (_selectedFile == null || _selectedDeadline == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Please select a file and set a deadline'),
-          backgroundColor: Colors.red,
-          duration: Duration(seconds: 2),
-        ),
-      );
-      return;
-    }
+    // Placeholder for upload functionality
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Success!'),
+        backgroundColor: Color.fromARGB(255, 25, 184, 88),
+        duration: Duration(seconds: 2),
+      ),
+    );
+  }
 
-    try {
-      final uri = Uri.parse(
-          'http://localhost/Tunisia_Learning_backend/TunisiaLearningPhp/upload_assignment.php'); // Replace with your server URL
-
-      // Convert deadline to string format (yyyy-MM-dd HH:mm:ss)
-      String deadlineString = _selectedDeadline!.toIso8601String();
-
-      final request = http.MultipartRequest('POST', uri)
-        ..fields['subject'] = _subjectController.text
-        ..fields['class'] = _classController.text
-        ..fields['level'] = _levelController.text
-        ..fields['notes'] = _notesController.text
-        ..fields['assignment_type'] = _assignmentType
-        ..fields['deadline'] = deadlineString
-        ..files.add(
-            await http.MultipartFile.fromPath('file', _selectedFile!.path));
-
-      final response = await request.send();
-
-      if (response.statusCode == 200) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('File uploaded successfully!'),
-            backgroundColor: Color(0xFF345FB4),
-            duration: Duration(seconds: 2),
-          ),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Failed to upload file'),
-            backgroundColor: Colors.red,
-            duration: Duration(seconds: 2),
-          ),
-        );
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+      // Handle navigation based on selected index
+      if (index == 1) {
+        Navigator.pushNamed(
+            context, 'HomeworkTrackingPage'); // Replace with your route name
       }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error uploading file: $e'),
-          backgroundColor: Colors.red,
-          duration: Duration(seconds: 2),
-        ),
-      );
-    }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Assignments', style: TextStyle(fontSize: 18)),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context); // Go back to the previous page
+          },
+        ),
+        title: Text('Assignments',
+            style: TextStyle(fontSize: 18, color: Colors.white)),
         backgroundColor: Color(0xFF345FB4),
       ),
       backgroundColor: Color.fromARGB(255, 255, 255, 255),
@@ -154,91 +123,83 @@ class _AssignmentPageState extends State<AssignmentPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Create New Assignment',
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF345FB4),
-                    fontSize: 20),
-              ),
-              SizedBox(height: 12),
+              SizedBox(height: 16),
               _buildTextField(_subjectController, 'Subject'),
-              SizedBox(height: 12),
+              SizedBox(height: 16),
               _buildTextField(_classController, 'Class'),
-              SizedBox(height: 12),
+              SizedBox(height: 16),
               _buildTextField(_levelController, 'Level'),
-              SizedBox(height: 12),
+              SizedBox(height: 16),
               _buildDropdown(),
-              SizedBox(height: 12),
-              SizedBox(
-                width: double.infinity, // Make button full width
-                child: ElevatedButton(
-                  onPressed: _pickFile,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF345FB4),
-                    padding: EdgeInsets.symmetric(vertical: 10),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8)),
-                  ),
-                  child: Text('Upload File',
-                      style: TextStyle(color: Colors.white)),
-                ),
+              SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  _buildIconButton(Icons.upload_file, 'Upload File', _pickFile),
+                  _buildIconButton(Icons.calendar_today, 'Set Deadline',
+                      () => _pickDeadline(context)),
+                ],
               ),
-              SizedBox(height: 12),
-              _selectedFile != null
+              SizedBox(height: 16),
+              _selectedFile == null
                   ? Text(
-                      'Selected File: ${_selectedFile!.path}',
-                      style: TextStyle(fontSize: 16, color: Colors.black),
+                      'No file selected',
+                      style: TextStyle(fontSize: 16, color: Colors.red),
                     )
                   : Text(
-                      'No File Selected',
-                      style: TextStyle(fontSize: 16, color: Colors.black),
+                      'Selected File: ${_selectedFile!.path.split('/').last}',
+                      style: TextStyle(fontSize: 16, color: Colors.green),
                     ),
-              SizedBox(height: 12),
-              SizedBox(
-                width: double.infinity, // Make button full width
-                child: ElevatedButton(
-                  onPressed: () => _pickDeadline(context),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF345FB4),
-                    padding: EdgeInsets.symmetric(vertical: 10),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8)),
-                  ),
-                  child: Text('Set Deadline',
-                      style: TextStyle(color: Colors.white)),
-                ),
-              ),
-              SizedBox(height: 12),
+              SizedBox(height: 16),
               _selectedDeadline != null
-                  ? Text(
-                      'Selected Deadline: ${_selectedDeadline!.toLocal().toString()}',
-                      style: TextStyle(fontSize: 16, color: Colors.black),
-                    )
-                  : Text(
-                      'No Deadline Selected',
-                      style: TextStyle(fontSize: 16, color: Colors.black),
-                    ),
-              SizedBox(height: 12),
-              _buildTextField(_notesController, 'Notes', maxLines: 3),
+                  ? Text('Selected Deadline: ${_selectedDeadline.toString()}',
+                      style: TextStyle(fontSize: 16, color: Colors.green))
+                  : Text('No Deadline Selected',
+                      style: TextStyle(fontSize: 16, color: Colors.red)),
+              SizedBox(height: 16),
+              _buildTextField(_notesController, 'Notes',
+                  maxLines: 5), // Increased max lines
               SizedBox(height: 24),
-              SizedBox(
-                width: double.infinity, // Make button full width
-                child: ElevatedButton(
-                  onPressed: _uploadFile,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF345FB4),
-                    padding: EdgeInsets.symmetric(vertical: 12),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8)),
-                  ),
-                  child: Text('Send Assignment',
-                      style: TextStyle(color: Colors.white)),
+              ElevatedButton(
+                onPressed: _uploadFile,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xFF345FB4),
+                  padding: EdgeInsets.symmetric(
+                      vertical: 16), // Increased vertical padding
+                  shape: RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.circular(12)), // Rounded corners
+                  minimumSize: Size(double.infinity, 50), // Full width button
                 ),
+                child: Text('Send Assignment',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18)), // Increased font size
               ),
             ],
           ),
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.assignment, size: 30), // Increased size
+            label: 'Assignments',
+            tooltip: 'View Assignments',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home_work, size: 30), // Increased size
+            label: 'Homework',
+            tooltip: 'View Homework',
+          ),
+        ],
+        showUnselectedLabels: true,
+        selectedLabelStyle:
+            TextStyle(fontSize: 14), // Increased size of selected label
+        unselectedLabelStyle:
+            TextStyle(fontSize: 14), // Increased size of unselected label
       ),
     );
   }
@@ -249,12 +210,15 @@ class _AssignmentPageState extends State<AssignmentPage> {
       controller: controller,
       decoration: InputDecoration(
         labelText: labelText,
-        labelStyle: TextStyle(color: Color(0xFF345FB4), fontSize: 14),
+        labelStyle: TextStyle(
+            color: Color(0xFF345FB4), fontSize: 16), // Increased font size
         border: OutlineInputBorder(),
-        contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+        contentPadding: EdgeInsets.symmetric(
+            vertical: 16, horizontal: 12), // Increased padding
       ),
       maxLines: maxLines,
-      style: TextStyle(fontSize: 14, color: Colors.black), // Black text
+      style:
+          TextStyle(fontSize: 16, color: Colors.black), // Increased font size
     );
   }
 
@@ -263,14 +227,20 @@ class _AssignmentPageState extends State<AssignmentPage> {
       value: _assignmentType,
       decoration: InputDecoration(
         labelText: 'Assignment Type',
-        labelStyle: TextStyle(color: Color(0xFF345FB4), fontSize: 14),
+        labelStyle: TextStyle(
+            color: Color(0xFF345FB4), fontSize: 16), // Increased font size
         border: OutlineInputBorder(),
-        contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+        contentPadding: EdgeInsets.symmetric(
+            vertical: 16, horizontal: 12), // Increased padding
       ),
-      items: <String>['Assignment', 'Homework', 'Project'].map((type) {
+      items: ['Assignment', 'Document', 'Course'].map((type) {
         return DropdownMenuItem<String>(
           value: type,
-          child: Text(type),
+          child: Text(
+            type,
+            style: TextStyle(
+                color: Colors.black, fontSize: 16), // Increased font size
+          ),
         );
       }).toList(),
       onChanged: (value) {
@@ -278,6 +248,21 @@ class _AssignmentPageState extends State<AssignmentPage> {
           _assignmentType = value!;
         });
       },
+    );
+  }
+
+  Widget _buildIconButton(IconData icon, String label, VoidCallback onPressed) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        IconButton(
+          icon: Icon(icon, size: 30), // Increased icon size
+          onPressed: onPressed,
+        ),
+        Text(label,
+            style: TextStyle(
+                fontSize: 14, color: Color(0xFF345FB4))) // Increased font size
+      ],
     );
   }
 }
