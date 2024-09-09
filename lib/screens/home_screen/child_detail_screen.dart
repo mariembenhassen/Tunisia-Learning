@@ -181,7 +181,7 @@ class _ChildDetailScreenState extends State<ChildDetailScreen> {
                     children: [
                       Icon(Icons.logout, color: Colors.black54),
                       SizedBox(width: 10),
-                      Text('Déconnexion'),
+                      Text('Logout'),
                     ],
                   ),
                 ),
@@ -233,7 +233,7 @@ class _ChildDetailScreenState extends State<ChildDetailScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Élève:',
+                                'Student  Name:',
                                 style: TextStyle(fontSize: 12),
                               ),
                               Text(
@@ -242,7 +242,7 @@ class _ChildDetailScreenState extends State<ChildDetailScreen> {
                               ),
                               SizedBox(height: 8), // Add space between elements
                               Text(
-                                'Nom d\'utilisateur:',
+                                'User Name',
                                 style: TextStyle(fontSize: 12),
                               ),
 
@@ -252,7 +252,7 @@ class _ChildDetailScreenState extends State<ChildDetailScreen> {
                               ),
                               SizedBox(height: 8), // Add space between elements
                               Text(
-                                'École:',
+                                'School Name:',
                                 style: TextStyle(fontSize: 12),
                               ),
                               Text(
@@ -288,7 +288,7 @@ class _ChildDetailScreenState extends State<ChildDetailScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
                                 Text(
-                                  'Niveau:',
+                                  'Level:',
                                   style: TextStyle(
                                     fontSize: 16.0,
                                     color: kTextBlackColor,
@@ -296,7 +296,9 @@ class _ChildDetailScreenState extends State<ChildDetailScreen> {
                                   ),
                                 ),
                                 Text(
-                                  '${childData['niveau_nom']}',
+                                  //justfornow
+                                  "1ére année",
+                                  // '${childData['niveau_nom']}',
                                   style: TextStyle(
                                     fontSize: 15.0,
                                     color: kTextBlackColor,
@@ -368,7 +370,7 @@ class _ChildDetailScreenState extends State<ChildDetailScreen> {
                                     });
                               },
                               icon: 'assets/icons/ask.svg',
-                              title: 'Messagerie',
+                              title: 'Messages',
                             ),
                             HomeCard(
                               onPress: () {
@@ -386,7 +388,7 @@ class _ChildDetailScreenState extends State<ChildDetailScreen> {
                                 );
                               },
                               icon: 'assets/icons/assignment.svg',
-                              title: 'Cours et exercice',
+                              title: 'Lessons and Exercises',
                             ),
                           ],
                         ),
@@ -408,7 +410,7 @@ class _ChildDetailScreenState extends State<ChildDetailScreen> {
                                 );
                               },
                               icon: 'assets/icons/documents-symbol.svg',
-                              title: ' Documents',
+                              title: 'Documents',
                             ),
                             HomeCard(
                               onPress: () {
@@ -425,7 +427,7 @@ class _ChildDetailScreenState extends State<ChildDetailScreen> {
                                     });
                               },
                               icon: 'assets/icons/timetable.svg',
-                              title: 'Emploi du temps',
+                              title: 'Timetable',
                             ),
                           ],
                         ),
@@ -438,7 +440,7 @@ class _ChildDetailScreenState extends State<ChildDetailScreen> {
                                 // context, DateSheetScreen.routeName);
                               },
                               icon: 'assets/icons/holiday.svg',
-                              title: 'Évènement',
+                              title: 'Events and Vactions',
                             ),
                             HomeCard(
                               onPress: () {
@@ -472,11 +474,16 @@ class HomeCard extends StatelessWidget {
     required this.onPress,
     required this.icon,
     required this.title,
+    this.titleStyle = const TextStyle(
+        fontSize: 14,
+        fontWeight: FontWeight.bold,
+        color: Color.fromARGB(255, 255, 254, 254)),
   }) : super(key: key);
 
   final VoidCallback onPress;
   final String icon;
   final String title;
+  final TextStyle titleStyle;
 
   @override
   Widget build(BuildContext context) {
@@ -501,8 +508,7 @@ class HomeCard extends StatelessWidget {
             ),
             Text(
               title,
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.subtitle2,
+              style: titleStyle,
             ),
           ],
         ),

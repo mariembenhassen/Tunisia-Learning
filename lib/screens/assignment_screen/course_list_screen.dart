@@ -85,7 +85,7 @@ class _CourseScreenState extends State<CourseScreen> {
   Color getSubjectColor(String subject) {
     switch (subject.toLowerCase()) {
       case 'قراءة وفهم':
-        return Colors.green;
+        return Color.fromARGB(255, 225, 82, 206);
       case 'الرياضيات':
         return Colors.orange;
       case 'التاريخ':
@@ -193,13 +193,14 @@ class _CourseScreenState extends State<CourseScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[200],
       appBar: AppBar(
         title: Text(
-          'Cours et Exercices',
+          'Lessons and Exercises',
           style: Theme.of(context).textTheme.titleLarge!.copyWith(
                 fontWeight: FontWeight.bold,
-                fontSize: 15.5,
-                color: Colors.white,
+                fontSize: 16.5,
+                color: Color.fromARGB(255, 255, 255, 255),
               ),
         ),
         backgroundColor: kPrimaryColor,
@@ -235,7 +236,7 @@ class _CourseScreenState extends State<CourseScreen> {
         ],
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(8.0), // Padding around the list
         child: FutureBuilder<List<Course>>(
           future: futureCourses,
           builder: (context, snapshot) {
@@ -252,73 +253,83 @@ class _CourseScreenState extends State<CourseScreen> {
                 itemBuilder: (context, index) {
                   Course course = courses[index];
                   return Card(
-                    elevation: 5,
+                    color: Color.fromARGB(
+                        255, 240, 248, 255), // Light background color
+                    elevation: 4, // Subtle shadow
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius:
+                          BorderRadius.circular(12), // Rounded corners
                     ),
+                    margin: EdgeInsets.symmetric(
+                        vertical: 8), // Margin between cards
                     child: Padding(
-                      padding: EdgeInsets.all(16),
+                      padding: EdgeInsets.all(16), // Padding inside the card
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             course.matiere,
                             style: TextStyle(
-                              fontSize: 40,
+                              fontSize: 24, // Reduced font size for title
                               fontWeight: FontWeight.bold,
                               color: getSubjectColor(course.matiere),
                             ),
                           ),
-                          SizedBox(height: 10),
+                          SizedBox(height: 8),
                           Text(
                             'Teacher: ${course.enseignant}',
                             style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.black26,
-                              fontWeight: FontWeight.w400,
+                              fontSize: 14, // Reduced font size
+                              color: Color.fromARGB(255, 50, 50,
+                                  50), // Darker text color for contrast
                             ),
                           ),
-                          SizedBox(height: 8),
+                          SizedBox(height: 6),
                           Text(
                             'Type: ${course.type}',
                             style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.black26,
-                              fontWeight: FontWeight.w400,
+                              fontSize: 14, // Reduced font size
+                              color: Color.fromARGB(
+                                  255, 50, 50, 50), // Darker text color
                             ),
                           ),
-                          SizedBox(height: 8),
+                          SizedBox(height: 6),
                           Text(
-                            'Date: ${course.date}',
+                            'Date: 2024/08/25',
                             style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.black26,
-                              fontWeight: FontWeight.w400,
+                              fontSize: 14, // Reduced font size
+                              color: Color.fromARGB(
+                                  255, 50, 50, 50), // Darker text color
                             ),
                           ),
                           SizedBox(height: 12),
-                          Divider(color: Colors.grey),
+                          Divider(
+                            color: Color.fromARGB(
+                                255, 200, 200, 200), // Lighter divider color
+                          ),
                           SizedBox(height: 8),
                           Text(
-                            'Documents:',
+                            'Files:',
                             style: TextStyle(
-                              fontSize: 16,
+                              fontSize: 16, // Font size for section title
                               fontWeight: FontWeight.bold,
-                              color: Colors.black,
+                              color: Color.fromARGB(255, 30, 30,
+                                  30), // Darker color for section title
                             ),
                           ),
                           SizedBox(height: 4),
                           Text(
-                            'Appuyer sur les documents ci-dessous pour les télécharger',
+                            'Tap on the documents below to download them.',
                             style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.black54,
+                              fontSize: 14, // Font size for description
+                              color: Color.fromARGB(
+                                  255, 100, 100, 100), // Subtle text color
                             ),
                           ),
                           SizedBox(height: 8),
                           Wrap(
-                            spacing: 16,
-                            runSpacing: 8,
+                            spacing: 12, // Spacing between file items
+                            runSpacing: 6,
                             children: course.documents.map((document) {
                               return InkWell(
                                 onTap: () {
@@ -331,15 +342,18 @@ class _CourseScreenState extends State<CourseScreen> {
                                   children: [
                                     Icon(
                                       Icons.file_present,
-                                      size: 40,
+                                      size: 32, // Size of the file icon
                                       color: getSubjectColor(course.matiere),
                                     ),
-                                    SizedBox(width: 8),
+                                    SizedBox(
+                                        width:
+                                            8), // Spacing between icon and text
                                     Text(
                                       document.titre,
                                       style: TextStyle(
                                         color: getSubjectColor(course.matiere),
-                                        fontSize: 14,
+                                        fontSize:
+                                            14, // Font size for file title
                                       ),
                                     ),
                                   ],
@@ -350,27 +364,33 @@ class _CourseScreenState extends State<CourseScreen> {
                           SizedBox(height: 16),
                           if (course.type.toLowerCase() == 'exercice') ...[
                             Text(
-                              'Veuillez soumettre votre devoir :',
+                              'Please submit your assignment:',
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.black,
+                                color: Color.fromARGB(255, 30, 30,
+                                    30), // Darker color for the prompt
                               ),
                             ),
                             SizedBox(height: 8),
                             ElevatedButton.icon(
                               onPressed: () => _pickFile(course.idcours),
-                              icon: Icon(Icons.upload_file),
-                              label: Text('Choisir un fichier'),
+                              icon: Icon(
+                                Icons.upload_file,
+                                color: Colors.white,
+                              ),
+                              label: Text(
+                                'Select file(s)',
+                                style: TextStyle(color: Colors.white),
+                              ),
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color.fromARGB(
-                                    255, 115, 173, 219), // Background color
+                                backgroundColor: Color.fromARGB(255, 70, 130,
+                                    180), // Button background color
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 12,
+                                    horizontal: 16), // Button padding
                               ),
                             ),
-                            /* ElevatedButton(
-                              onPressed: _pickFile,
-                              child: Text('Choisir un fichier'),
-                            ),*/
                           ],
                         ],
                       ),

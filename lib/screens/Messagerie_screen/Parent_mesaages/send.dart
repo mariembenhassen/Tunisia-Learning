@@ -21,7 +21,7 @@ class _MessageSendingPageState extends State<MessageSendingPage> {
   @override
   void initState() {
     super.initState();
-    _selectedRecipientType = 'Enseignant'; // Default recipient type
+    _selectedRecipientType = 'Teacher '; // Default recipient type
   }
 
   @override
@@ -52,36 +52,34 @@ class _MessageSendingPageState extends State<MessageSendingPage> {
     return Scaffold(
       backgroundColor: Colors.grey[200], // Light grey background
       appBar: AppBar(
-        title: Text('Send Message'),
-        backgroundColor: const Color.fromARGB(255, 21, 63, 137),
+        title: Text(
+          'Send Message',
+          style: TextStyle(
+              fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+        ),
+        backgroundColor: Color(0xFF345FB4),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Text(
-              'Compose your message',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.blueAccent,
-              ),
-            ),
-            SizedBox(height: 20),
             DropdownButtonFormField<String>(
               value: _selectedRecipientType,
               decoration: InputDecoration(
-                labelText: 'Recipient type',
-                border: OutlineInputBorder(),
+                labelText: 'Recipient Type',
+                labelStyle:
+                    TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
               ),
-              items: ['Enseignant', 'Other Type'].map((type) {
+              items: ['Teacher ', 'Admin'].map((type) {
                 return DropdownMenuItem<String>(
                   value: type,
                   child: Text(
                     type,
-                    style: TextStyle(color: Colors.black),
+                    style: TextStyle(color: Colors.black, fontSize: 16),
                   ),
                 );
               }).toList(),
@@ -94,11 +92,15 @@ class _MessageSendingPageState extends State<MessageSendingPage> {
               },
             ),
             SizedBox(height: 20),
-            if (_selectedRecipientType == 'Enseignant') ...[
+            if (_selectedRecipientType == 'Teacher ') ...[
               DropdownButtonFormField<Teacher>(
                 decoration: InputDecoration(
-                  labelText: "Select a teacher",
-                  border: OutlineInputBorder(),
+                  labelText: "Teacher Name",
+                  labelStyle:
+                      TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                 ),
                 value: _selectedTeacher,
                 items: filteredTeachers.map((Teacher teacher) {
@@ -106,7 +108,7 @@ class _MessageSendingPageState extends State<MessageSendingPage> {
                     value: teacher,
                     child: Text(
                       teacher.fullName,
-                      style: TextStyle(color: Colors.black),
+                      style: TextStyle(color: Colors.black, fontSize: 16),
                     ),
                   );
                 }).toList(),
@@ -120,8 +122,12 @@ class _MessageSendingPageState extends State<MessageSendingPage> {
             ],
             DropdownButtonFormField<String>(
               decoration: InputDecoration(
-                labelText: "Select child",
-                border: OutlineInputBorder(),
+                labelText: "Student Name",
+                labelStyle:
+                    TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
               ),
               value: _selectedChild,
               items: childrenNames.map((String child) {
@@ -129,7 +135,7 @@ class _MessageSendingPageState extends State<MessageSendingPage> {
                   value: child,
                   child: Text(
                     child,
-                    style: TextStyle(color: Colors.black),
+                    style: TextStyle(color: Colors.black, fontSize: 16),
                   ),
                 );
               }).toList(),
@@ -142,25 +148,35 @@ class _MessageSendingPageState extends State<MessageSendingPage> {
             SizedBox(height: 20),
             TextField(
               controller: _messageController,
-              style: TextStyle(color: Colors.black),
+              style: TextStyle(color: Colors.black, fontSize: 12),
               maxLines: null, // Unlimited lines
               decoration: InputDecoration(
                 hintText: 'Type your message here...',
-                border: OutlineInputBorder(),
+                hintStyle: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
               ),
             ),
             SizedBox(height: 20),
-            ElevatedButton(
+            ElevatedButton.icon(
               onPressed: _sendMessage,
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.white,
-                backgroundColor: Color.fromARGB(255, 44, 50, 202),
+                backgroundColor: Color(0xFF6789CA),
                 padding: EdgeInsets.symmetric(vertical: 15),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
               ),
-              child: Text('Envoyer'), // Changed the label to 'Envoyer'
+              icon: Icon(Icons.send,
+                  size: 24, color: Colors.white), // Added the send icon
+              label: Text(
+                'Send',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
             ),
             SizedBox(height: 20),
           ],
@@ -170,7 +186,7 @@ class _MessageSendingPageState extends State<MessageSendingPage> {
   }
 
   void _sendMessage() async {
-    if (_selectedTeacher == null && _selectedRecipientType == 'Enseignant') {
+    if (_selectedTeacher == null && _selectedRecipientType == 'Teacher ') {
       _showErrorDialog('Please select a teacher.');
       return;
     }

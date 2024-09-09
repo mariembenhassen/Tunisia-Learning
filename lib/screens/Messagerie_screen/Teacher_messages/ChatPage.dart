@@ -115,7 +115,7 @@ class _ChatTeacherPageState extends State<ChatTeacherPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Messages',
+          'Chat',
           style: TextStyle(
             color: Colors.white,
             fontSize: 20,
@@ -224,10 +224,11 @@ class _ChatTeacherPageState extends State<ChatTeacherPage> {
                   Expanded(
                     child: TextField(
                       controller: messageController,
-                      style: TextStyle(color: Colors.black87),
+                      style: TextStyle(color: Colors.black87, fontSize: 14),
                       decoration: InputDecoration(
                         hintText: 'Type a message...',
-                        hintStyle: TextStyle(color: Colors.grey[400]),
+                        hintStyle:
+                            TextStyle(color: Colors.grey[400], fontSize: 14),
                         filled: true,
                         fillColor: Colors.white,
                         contentPadding: EdgeInsets.symmetric(

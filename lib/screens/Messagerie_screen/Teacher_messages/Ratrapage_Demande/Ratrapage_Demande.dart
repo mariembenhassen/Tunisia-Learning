@@ -175,7 +175,7 @@ class _RatrapageScreenState extends State<RatrapageScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Demande de Rattrapage',
+          'Catch_Up Lessons',
           style: TextStyle(color: Colors.white),
         ),
         leading: IconButton(
@@ -190,19 +190,11 @@ class _RatrapageScreenState extends State<RatrapageScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Veuillez compléter les informations suivantes:',
-              style: Theme.of(context).textTheme.headline5?.copyWith(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 20,
-                    color: Colors.blueGrey[800],
-                  ),
-            ),
-            SizedBox(height: 20),
+     
             _buildDropdown(
               items: matieres,
               value: selectedMatiere,
-              hint: 'Sélectionnez Matière',
+              hint: 'Subject Name',
               onChanged: (int? newValue) {
                 setState(() {
                   selectedMatiere = newValue;
@@ -220,7 +212,7 @@ class _RatrapageScreenState extends State<RatrapageScreen> {
             _buildDropdown(
               items: niveaux,
               value: selectedNiveau,
-              hint: 'Sélectionnez Niveau',
+              hint: 'Level',
               onChanged: (int? newValue) {
                 setState(() {
                   selectedNiveau = newValue;
@@ -238,7 +230,7 @@ class _RatrapageScreenState extends State<RatrapageScreen> {
             _buildDropdown(
               items: classes,
               value: selectedClasse,
-              hint: 'Sélectionnez Classe',
+              hint: 'Class',
               onChanged: (int? newValue) {
                 setState(() {
                   selectedClasse = newValue;
@@ -251,7 +243,7 @@ class _RatrapageScreenState extends State<RatrapageScreen> {
             ),
             SizedBox(height: 20),
             Text(
-              'Observation:',
+              'Notes:',
               style: Theme.of(context).textTheme.subtitle1?.copyWith(
                     fontWeight: FontWeight.bold,
                     color: Colors.blueGrey[800],
@@ -268,7 +260,7 @@ class _RatrapageScreenState extends State<RatrapageScreen> {
                 ),
                 filled: true,
                 fillColor: Colors.white,
-                hintText: 'Entrez votre observation ici',
+                hintText: 'Notes place here.',
                 hintStyle:
                     TextStyle(color: Colors.grey[600]), // Light grey hint text
               ),
@@ -298,7 +290,7 @@ class _RatrapageScreenState extends State<RatrapageScreen> {
             ),
             SizedBox(height: 20),
             Text(
-              'Heure:',
+              'Time',
               style: Theme.of(context).textTheme.subtitle1?.copyWith(
                     fontWeight: FontWeight.bold,
                     color: Colors.blueGrey[800],
@@ -333,7 +325,7 @@ class _RatrapageScreenState extends State<RatrapageScreen> {
                       EdgeInsets.symmetric(vertical: 15), // Adjust padding here
                 ),
                 child: Text(
-                  'Soumettre',
+                  'Send',
                   style: TextStyle(fontSize: 16, color: Colors.white),
                 ),
               ),

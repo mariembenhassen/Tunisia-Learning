@@ -6,9 +6,6 @@ import 'package:sizer/sizer.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
-import 'package:http/http.dart' as http;
-import 'dart:async';
-import 'dart:convert';
 
 class ParentHomeScreen extends StatefulWidget {
   static const String routeName = 'ParentHomeScreen';
@@ -95,17 +92,11 @@ class _ParentHomeScreenState extends State<ParentHomeScreen> {
           'Tunisia Learning',
           style: Theme.of(context).textTheme.headline6!.copyWith(
                 fontWeight: FontWeight.bold,
-                fontSize: 15.5,
+                fontSize: 22.0,
                 color: Colors.white,
               ),
         ),
         actions: [
-          IconButton(
-            icon: Icon(Icons.notifications, size: 30),
-            onPressed: () {
-              // Handle bell icon press
-            },
-          ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: PopupMenuButton<String>(
@@ -124,7 +115,7 @@ class _ParentHomeScreenState extends State<ParentHomeScreen> {
                     children: [
                       Icon(Icons.logout, color: Colors.black54),
                       SizedBox(width: 10),
-                      Text('Déconnexion'),
+                      Text('Logout'),
                     ],
                   ),
                 ),
@@ -138,57 +129,23 @@ class _ParentHomeScreenState extends State<ParentHomeScreen> {
         ],
       ),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            width: MediaQuery.of(context).size.width,
-            padding: EdgeInsets.all(20.0),
-            color: Color(0xFF345FB4),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Nom d'utilisateur :",
-                      style: Theme.of(context).textTheme.subtitle1!.copyWith(
-                            fontSize: 12.0,
-                          ),
-                    ),
-                    Text(nomprenom,
-                        style: Theme.of(context).textTheme.subtitle2!.copyWith(
-                              fontSize: 12.0,
-                              color: Colors.white,
-                            )),
-                    Text(
-                      "Nom d'établissement :",
-                      style: Theme.of(context).textTheme.subtitle1!.copyWith(
-                            fontSize: 12.0,
-                          ),
-                    ),
-                    Text('School',
-                        style: Theme.of(context).textTheme.subtitle2!.copyWith(
-                              fontSize: 12.0,
-                              color: Colors.white,
-                            )),
-                  ],
-                ),
-              ],
-            ),
-          ),
           Expanded(
             child: Container(
-              width: 100.w,
+              width: MediaQuery.of(context).size.width,
               decoration: BoxDecoration(
                 color: Color(0xFFF4F6F7),
-                borderRadius: BorderRadius.circular(20.0),
+                borderRadius: BorderRadius.vertical(top: Radius.circular(10.0)),
               ),
               child: children.isEmpty
                   ? Center(
                       child: Text(
                         'No children found.',
-                        style: Theme.of(context).textTheme.subtitle1,
+                        style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                              fontSize: 18.0,
+                              color: Colors.black54,
+                            ),
                       ),
                     )
                   : GridView.builder(
@@ -209,6 +166,20 @@ class _ParentHomeScreenState extends State<ParentHomeScreen> {
                         );
                       },
                     ),
+            ),
+          ),
+          Container(
+            width: MediaQuery.of(context).size.width,
+            padding: EdgeInsets.all(20.0),
+            color: Color.fromARGB(255, 72, 183, 113),
+            child: Text(
+              "Welcome to Tunisia Learning!",
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.headline6!.copyWith(
+                    fontSize: 20.0,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
           ),
         ],
@@ -242,16 +213,28 @@ class HomeCard extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           color: Color(0xFF345FB4),
-          borderRadius: BorderRadius.circular(20.0),
+          borderRadius: BorderRadius.circular(15.0),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.3),
+              spreadRadius: 2,
+              blurRadius: 8,
+              offset: Offset(0, 4), // changes position of shadow
+            ),
+          ],
         ),
+        padding: EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(height: 10.0),
             Text(
               title,
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.subtitle2,
+              style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                    color: Colors.white,
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
           ],
         ),

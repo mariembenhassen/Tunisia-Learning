@@ -213,7 +213,7 @@ class _SendToParentPageState extends State<SendToParentPage> {
                 children: <Widget>[
                   ElevatedButton(
                     onPressed: _selectParent,
-                    child: Text('Search Parent',
+                    child: Text('Parent Name',
                         style: TextStyle(color: Colors.white)),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue[700], // Background color
@@ -239,7 +239,7 @@ class _SendToParentPageState extends State<SendToParentPage> {
                 children: <Widget>[
                   ElevatedButton(
                     onPressed: _selectStudent,
-                    child: Text('Search Student',
+                    child: Text('Student Name',
                         style: TextStyle(color: Colors.white)),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue[700], // Background color
@@ -260,21 +260,7 @@ class _SendToParentPageState extends State<SendToParentPage> {
                           style: TextStyle(color: Colors.grey[800])),
                 ],
               ),
-            SizedBox(height: 20),
-            // Message TextField
-            TextField(
-              controller: _messageController,
-              style: TextStyle(color: Colors.black38),
-              decoration: InputDecoration(
-                labelText: 'Type your message here',
-                border: OutlineInputBorder(),
-                filled: true,
-                fillColor: Colors.white,
-              ),
-              maxLines: 4,
-            ),
-            SizedBox(height: 20),
-            // Send Button
+        
             ElevatedButton(
               onPressed: _sendMessage,
               style: ElevatedButton.styleFrom(
@@ -294,7 +280,7 @@ class _SendToParentPageState extends State<SendToParentPage> {
                 children: [
                   Icon(Icons.send, size: 20), // Add the icon
                   SizedBox(width: 10), // Space between the icon and text
-                  Text('Envoyer',
+                  Text('Send',
                       style: TextStyle(fontSize: 16)), // Adjust font size
                 ],
               ),

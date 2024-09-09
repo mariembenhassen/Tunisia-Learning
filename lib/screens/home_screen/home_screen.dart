@@ -187,7 +187,7 @@ class _HomeScreenState extends State<HomeScreen> {
             },
             itemBuilder: (BuildContext context) => [
               PopupMenuItem<String>(
-                value: 'Profile Paramètre',
+                value: 'Profile Settings',
                 child: Row(
                   children: [
                     Icon(Icons.settings, color: Colors.black),
@@ -259,23 +259,24 @@ class _HomeScreenState extends State<HomeScreen> {
                         Text('${teacherDetails.nom} ${teacherDetails.prenom}',
                             style: Theme.of(context)
                                 .textTheme
-                                .titleSmall!
+                                .titleLarge!
                                 .copyWith(
                                   fontSize: 14.0,
                                   color: Colors.white,
                                 )),
 
                         Text(
-                          'Institution Name:',
+                          'School Name:',
                           style:
                               Theme.of(context).textTheme.titleMedium!.copyWith(
                                     fontSize: 12.0,
                                   ),
                         ),
+
                         Text('${teacherDetails.etablissement}',
                             style: Theme.of(context)
                                 .textTheme
-                                .titleSmall!
+                                .titleLarge!
                                 .copyWith(
                                   fontSize: 15.0,
                                   color: Colors.white,
@@ -292,7 +293,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         Text('${teacherDetails.anneeScolaireEnCours}',
                             style: Theme.of(context)
                                 .textTheme
-                                .titleSmall!
+                                .titleLarge!
                                 .copyWith(
                                   fontSize: 15.0,
                                   color: Colors.white,
@@ -344,7 +345,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 });
                           },
                           icon: 'assets/icons/ask.svg',
-                          title: 'Messagerie',
+                          title: 'Messages',
                         ),
                         HomeCard(
                           onPress: () {
@@ -375,7 +376,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             );
                           },
                           icon: 'assets/icons/holiday.svg',
-                          title: 'Absence Request',
+                          title: 'Absence Post',
                         ),
                         HomeCard(
                           onPress: () {
@@ -390,7 +391,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             );
                           },
                           icon: 'assets/icons/timetable.svg',
-                          title: 'Extra Lessons Request',
+                          title: 'Extra_Lessons Post',
                         ),
                       ],
                     ),
@@ -398,15 +399,15 @@ class _HomeScreenState extends State<HomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         HomeCard(
-                         onPress: () {
-    Navigator.pushNamed(
-      context,
-      AssignmentPage.routeName,
-      arguments: {
-        'iduser': int.parse(teacherDetails.id),
-      },
-    );
-  },
+                          onPress: () {
+                            Navigator.pushNamed(
+                              context,
+                              AssignmentPage.routeName,
+                              arguments: {
+                                'iduser': int.parse(teacherDetails.id),
+                              },
+                            );
+                          },
                           icon: 'assets/icons/resume.svg',
                           title: 'Assignement',
                         ),
@@ -435,15 +436,20 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 class HomeCard extends StatelessWidget {
-  const HomeCard(
-      {Key? key,
-      required this.onPress,
-      required this.icon,
-      required this.title})
-      : super(key: key);
+  const HomeCard({
+    Key? key,
+    required this.onPress,
+    required this.icon,
+    required this.title,
+    this.titleStyle = const TextStyle(
+        fontSize: 14,
+        fontWeight: FontWeight.bold,
+        color: Color.fromARGB(255, 255, 254, 254)),
+  }) : super(key: key);
   final VoidCallback onPress;
   final String icon;
   final String title;
+  final TextStyle titleStyle;
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -468,8 +474,7 @@ class HomeCard extends StatelessWidget {
             ),
             Text(
               title,
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.subtitle2,
+              style: titleStyle,
             ),
           ],
         ),

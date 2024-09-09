@@ -131,7 +131,7 @@ class _AbscenceScreenState extends State<AbscenceScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Demande d\'Absence',
+          'Absence Post',
           style: TextStyle(color: Colors.white, fontSize: 20),
         ),
         leading: IconButton(
@@ -146,32 +146,8 @@ class _AbscenceScreenState extends State<AbscenceScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Center(
-              child: Column(
-                children: [
-                  Text(
-                    'Bienvenue',
-                    style: Theme.of(context).textTheme.headline4?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.blue[800],
-                        ),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    'Veuillez remplir les détails ci-dessous pour soumettre votre demande d\'absence.',
-                    style: Theme.of(context).textTheme.subtitle1?.copyWith(
-                          color: Colors.black,
-                        ),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 20),
-            Divider(color: Colors.blue[800]),
-            SizedBox(height: 20),
             Text(
-              'Observation:',
+              'Note:',
               style: Theme.of(context).textTheme.subtitle1?.copyWith(
                     fontWeight: FontWeight.bold,
                     color: Colors.black,
@@ -188,7 +164,7 @@ class _AbscenceScreenState extends State<AbscenceScreen> {
                 ),
                 filled: true,
                 fillColor: Colors.white,
-                hintText: 'Entrez votre observation ici',
+                hintText: 'Notes place here.',
                 hintStyle: TextStyle(color: Colors.grey[600]),
               ),
             ),
@@ -224,7 +200,7 @@ class _AbscenceScreenState extends State<AbscenceScreen> {
               child: ElevatedButton(
                 onPressed: _sendAbsenceRequest,
                 child: Text(
-                  'Envoyer',
+                  'Send',
                   style: TextStyle(fontSize: 18, color: Colors.white),
                 ),
                 style: ElevatedButton.styleFrom(
@@ -239,7 +215,7 @@ class _AbscenceScreenState extends State<AbscenceScreen> {
             SizedBox(height: 40),
             Center(
               child: Text(
-                'Merci de votre coopération!',
+                'Thank you!',
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,

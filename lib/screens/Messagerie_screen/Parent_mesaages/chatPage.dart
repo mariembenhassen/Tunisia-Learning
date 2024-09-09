@@ -117,7 +117,7 @@ class _ChatPageState extends State<ChatPage> {
     return Scaffold(
       backgroundColor: Colors.grey[50], // Light grey background color
       appBar: AppBar(
-        title: Text('Chat with Teacher', style: TextStyle(color: Colors.white)),
+        title: Text('Chat', style: TextStyle(color: Colors.white)),
         backgroundColor: Color(0xFF345FB4),
       ),
       body: conversation.isEmpty
@@ -134,7 +134,7 @@ class _ChatPageState extends State<ChatPage> {
                           ? 'You'
                           : '${message['nom'] ?? ''} ${message['prenom'] ?? ''}';
                       Color bubbleColor =
-                          isMe ? Color(0xFF007AFF) : Colors.white;
+                          isMe ? Color(0xFF6789CA) : Colors.white;
                       Color textColor = isMe ? Colors.white : Colors.black87;
                       Alignment alignment =
                           isMe ? Alignment.centerRight : Alignment.centerLeft;
@@ -206,11 +206,11 @@ class _ChatPageState extends State<ChatPage> {
                       Expanded(
                         child: TextField(
                           controller: messageController,
-                          style: TextStyle(color: Colors.black87),
+                          style: TextStyle(color: Colors.black87, fontSize: 12),
                           decoration: InputDecoration(
                             hintText: 'Type a message',
                             hintStyle: TextStyle(
-                                color: Colors.grey[600]), // Subtle hint color
+                                color: Colors.grey[600],fontSize: 12), // Subtle hint color
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(
                                   25.0), // Slightly larger radius
@@ -227,7 +227,7 @@ class _ChatPageState extends State<ChatPage> {
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(25.0),
                               borderSide: BorderSide(
-                                  color: Color(0xFF007AFF),
+                                  color: Color(0xFF6789CA),
                                   width: 1.5), // Focus border color
                             ),
                           ),
@@ -237,12 +237,12 @@ class _ChatPageState extends State<ChatPage> {
                           width:
                               10.0), // Increased spacing between the text field and the button
                       CircleAvatar(
-                        backgroundColor: Colors.white, // Prominent button color
+                        backgroundColor:
+                            Color(0xFF345FB4), // Prominent button color
                         radius:
                             25.0, // Slightly larger radius for better touch target
                         child: IconButton(
-                          icon: Icon(Icons.send,
-                              color: Color.fromARGB(255, 36, 44, 153)),
+                          icon: Icon(Icons.send, color: Colors.white),
                           onPressed: sendMessage,
                           iconSize: 20.0, // Adjusted icon size
                         ),
