@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_first_project/constante.dart';
+import 'package:flutter_first_project/reports.dart';
 import 'package:flutter_first_project/screens/home_screen/home_screen.dart';
 import 'package:sizer/sizer.dart';
 import 'dart:convert';
@@ -146,7 +147,11 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
         actions: [
           InkWell(
             onTap: () {
-              print('Sending report to school management');
+              print("Report button clicked");
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ReportIssuePage()),
+              );
             },
             child: Container(
               padding: EdgeInsets.only(right: kDefaultPadding / 2),
@@ -158,7 +163,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                   Text(
                     'Report',
                     style: Theme.of(context).textTheme.subtitle2?.copyWith(
-                        color: const Color.fromARGB(255, 255, 255, 255)),
+                          color: const Color.fromARGB(255, 255, 255, 255),
+                        ),
                   ),
                 ],
               ),

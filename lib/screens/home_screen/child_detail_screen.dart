@@ -12,6 +12,7 @@ import 'package:flutter_first_project/screens/data/course_model.dart';
 import 'package:flutter_first_project/screens/emploi_du_temps_screen/emploi_du_temps_screen.dart';
 import 'package:flutter_first_project/screens/login_screen/login_screen.dart';
 import 'package:flutter_first_project/constante.dart';
+import 'package:flutter_first_project/vacationandevents.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sizer/sizer.dart';
 import 'package:http/http.dart' as http;
@@ -436,8 +437,12 @@ class _ChildDetailScreenState extends State<ChildDetailScreen> {
                           children: [
                             HomeCard(
                               onPress: () {
-                                // Navigator.pushNamed(
-                                // context, DateSheetScreen.routeName);
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          EventsVacationsPage()),
+                                );
                               },
                               icon: 'assets/icons/holiday.svg',
                               title: 'Events and Vactions',

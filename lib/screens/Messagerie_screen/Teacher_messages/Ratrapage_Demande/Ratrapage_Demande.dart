@@ -190,7 +190,6 @@ class _RatrapageScreenState extends State<RatrapageScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-     
             _buildDropdown(
               items: matieres,
               value: selectedMatiere,
@@ -205,7 +204,8 @@ class _RatrapageScreenState extends State<RatrapageScreen> {
               },
               itemBuilder: (context, item) => Text(
                 item['matiere'],
-                style: TextStyle(color: Colors.black), // Changed to black
+                style: TextStyle(
+                    color: Colors.black, fontSize: 15), // Changed to black
               ),
             ),
             SizedBox(height: 20),
@@ -223,7 +223,8 @@ class _RatrapageScreenState extends State<RatrapageScreen> {
               },
               itemBuilder: (context, item) => Text(
                 item['niveau'],
-                style: TextStyle(color: Colors.black), // Changed to black
+                style: TextStyle(
+                    color: Colors.black, fontSize: 15), // Changed to black
               ),
             ),
             SizedBox(height: 20),
@@ -261,8 +262,9 @@ class _RatrapageScreenState extends State<RatrapageScreen> {
                 filled: true,
                 fillColor: Colors.white,
                 hintText: 'Notes place here.',
-                hintStyle:
-                    TextStyle(color: Colors.grey[600]), // Light grey hint text
+                hintStyle: TextStyle(
+                    color: Colors.grey[600],
+                    fontSize: 15), // Light grey hint text
               ),
             ),
             SizedBox(height: 20),
@@ -271,6 +273,7 @@ class _RatrapageScreenState extends State<RatrapageScreen> {
               style: Theme.of(context).textTheme.subtitle1?.copyWith(
                     fontWeight: FontWeight.bold,
                     color: Colors.blueGrey[800],
+                    fontSize: 15,
                   ),
             ),
             SizedBox(height: 8),
@@ -283,8 +286,10 @@ class _RatrapageScreenState extends State<RatrapageScreen> {
                 filled: true,
                 fillColor: Colors.white,
                 hintText: 'jj/mm/aaaa',
-                hintStyle:
-                    TextStyle(color: Colors.grey[600]), // Light grey hint text
+                hintStyle: TextStyle(
+                  color: Colors.grey[600],
+                  fontSize: 15,
+                ), // Light grey hint text
               ),
               keyboardType: TextInputType.datetime,
             ),
@@ -294,6 +299,7 @@ class _RatrapageScreenState extends State<RatrapageScreen> {
               style: Theme.of(context).textTheme.subtitle1?.copyWith(
                     fontWeight: FontWeight.bold,
                     color: Colors.blueGrey[800],
+                    fontSize: 15,
                   ),
             ),
             SizedBox(height: 8),
@@ -306,8 +312,10 @@ class _RatrapageScreenState extends State<RatrapageScreen> {
                 filled: true,
                 fillColor: Colors.white,
                 hintText: 'hh:mm',
-                hintStyle:
-                    TextStyle(color: Colors.grey[600]), // Light grey hint text
+                hintStyle: TextStyle(
+                  color: Colors.grey[600],
+                  fontSize: 15,
+                ), // Light grey hint text
               ),
               keyboardType: TextInputType.datetime,
             ),

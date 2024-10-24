@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_first_project/screens/Messagerie_screen/Teacher_messages/ChatPage.dart';
+import 'package:flutter_first_project/screens/Messagerie_screen/Teacher_messages/send_to_parent.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -379,7 +380,9 @@ class _TeacherMessagingPageState extends State<TeacherMessagingPage> {
         onPressed: () {
           Navigator.pushNamed(
             context,
-            '/sendMessagePage', // Define your route for sending message
+            SendToParentPage.routeName,
+
+            // Define your route for sending message
             arguments: {
               'students': _students,
               'parents': _parents,

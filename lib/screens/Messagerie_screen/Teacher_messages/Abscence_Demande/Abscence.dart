@@ -97,10 +97,14 @@ class _AbscenceScreenState extends State<AbscenceScreen> {
             // Styling for calendar and date selection
             dialogBackgroundColor: Colors.white,
             textTheme: TextTheme(
-              headline6:
-                  TextStyle(color: Colors.black), // Black color for date text
-              bodyText2:
-                  TextStyle(color: Colors.black), // Black color for body text
+              headline6: TextStyle(
+                color: Colors.black,
+                fontSize: 15,
+              ), // Black color for date text
+              bodyText2: TextStyle(
+                color: Colors.black,
+                fontSize: 15,
+              ), // Black color for body text
             ),
             buttonTheme: ButtonThemeData(
               buttonColor: Colors.blue[800], // Blue color for buttons
@@ -112,7 +116,10 @@ class _AbscenceScreenState extends State<AbscenceScreen> {
               ),
               filled: true,
               fillColor: Colors.white,
-              hintStyle: TextStyle(color: Colors.grey[600]),
+              hintStyle: TextStyle(
+                color: Colors.grey[600],
+                fontSize: 15,
+              ),
             ),
           ),
           child: child!,
@@ -151,13 +158,17 @@ class _AbscenceScreenState extends State<AbscenceScreen> {
               style: Theme.of(context).textTheme.subtitle1?.copyWith(
                     fontWeight: FontWeight.bold,
                     color: Colors.black,
+                    fontSize: 15,
                   ),
             ),
             SizedBox(height: 8),
             TextField(
               controller: _observationController,
               maxLines: 4,
-              style: TextStyle(color: Colors.black),
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 15,
+              ),
               decoration: InputDecoration(
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -165,7 +176,10 @@ class _AbscenceScreenState extends State<AbscenceScreen> {
                 filled: true,
                 fillColor: Colors.white,
                 hintText: 'Notes place here.',
-                hintStyle: TextStyle(color: Colors.grey[600]),
+                hintStyle: TextStyle(
+                  color: Colors.grey[600],
+                  fontSize: 15,
+                ),
               ),
             ),
             SizedBox(height: 20),
@@ -180,7 +194,10 @@ class _AbscenceScreenState extends State<AbscenceScreen> {
             TextFormField(
               controller: _dateController,
               readOnly: true,
-              style: TextStyle(color: Colors.black),
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 15,
+              ),
               decoration: InputDecoration(
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -188,7 +205,10 @@ class _AbscenceScreenState extends State<AbscenceScreen> {
                 filled: true,
                 fillColor: Colors.white,
                 hintText: 'YYYY-MM-DD',
-                hintStyle: TextStyle(color: Colors.grey[600]),
+                hintStyle: TextStyle(
+                  color: Colors.grey[600],
+                  fontSize: 15,
+                ),
                 suffixIcon: IconButton(
                   icon: Icon(Icons.calendar_today, color: Colors.blue[800]),
                   onPressed: () => _selectDate(context),
